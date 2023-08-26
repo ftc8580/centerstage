@@ -4,7 +4,9 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode
+import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
@@ -17,8 +19,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 class LocalizationTest : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        val drive = SampleMecanumDrive(hardwareMap)
-        drive.setMode(RunMode.RUN_WITHOUT_ENCODER)
+        val drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         waitForStart()
         while (!isStopRequested) {
             drive.setWeightedDrivePower(

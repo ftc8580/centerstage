@@ -6,8 +6,10 @@ import com.acmerobotics.roadrunner.util.Angle.normDelta
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.RobotLog
+import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
@@ -65,7 +67,7 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer
 class TrackingWheelLateralDistanceTuner : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        val drive = SampleMecanumDrive(hardwareMap)
+        val drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         if (drive.localizer !is StandardTrackingWheelLocalizer) {
             RobotLog.setGlobalErrorMsg(
                 "StandardTrackingWheelLocalizer is not being set in the "

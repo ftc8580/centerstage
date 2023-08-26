@@ -13,8 +13,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.RobotLog
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.firstinspires.ftc.teamcode.drive.DriveConstants
+import org.firstinspires.ftc.teamcode.config.CDConfig
+import org.firstinspires.ftc.teamcode.config.DriveConstants
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /*
  * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
@@ -51,7 +53,7 @@ class ManualFeedforwardTuner : LinearOpMode() {
             )
         }
         val telemetry: Telemetry = MultipleTelemetry(telemetry, dashboard.telemetry)
-        drive = SampleMecanumDrive(hardwareMap)
+        drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         val voltageSensor = hardwareMap.voltageSensor.iterator().next()
         mode = Mode.TUNING_MODE
         val clock = NanoClock.system()

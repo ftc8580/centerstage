@@ -6,12 +6,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.firstinspires.ftc.teamcode.drive.DriveConstants
+import org.firstinspires.ftc.teamcode.config.CDConfig
+import org.firstinspires.ftc.teamcode.config.DriveConstants
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /**
  * This routine is designed to calculate the maximum velocity your bot can achieve under load. It
@@ -32,8 +33,7 @@ class MaxVelocityTuner : LinearOpMode() {
 
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        val drive = SampleMecanumDrive(hardwareMap)
-        drive.setMode(RunMode.RUN_WITHOUT_ENCODER)
+        val drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next()
         val telemetry: Telemetry =
             MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)

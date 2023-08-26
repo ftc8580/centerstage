@@ -10,8 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.RobotLog
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.internal.system.Misc
-import org.firstinspires.ftc.teamcode.drive.DriveConstants
+import org.firstinspires.ftc.teamcode.config.DriveConstants
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.util.LoggingUtil
 import org.firstinspires.ftc.teamcode.util.RegressionUtil
 import kotlin.math.sqrt
@@ -39,7 +40,7 @@ class AutomaticFeedforwardTuner : LinearOpMode() {
         }
         val telemetry: Telemetry =
             MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
-        val drive = SampleMecanumDrive(hardwareMap)
+        val drive = SampleMecanumDrive(HardwareManager(org.firstinspires.ftc.teamcode.config.CDConfig(), hardwareMap))
         val clock = NanoClock.system()
         telemetry.addLine("Press play to begin the feedforward tuning routine")
         telemetry.update()

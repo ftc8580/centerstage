@@ -14,27 +14,18 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint
-import com.qualcomm.hardware.lynx.LynxModule
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode
-import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.IMU
-import com.qualcomm.robotcore.hardware.PIDFCoefficients
-import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.teamcode.config.DriveConstants
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner
-import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 import kotlin.math.abs
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
+class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     DriveConstants.kV,
     DriveConstants.kA,
     DriveConstants.kStatic,
@@ -44,13 +35,6 @@ class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
 ) {
     private val trajectorySequenceRunner: TrajectorySequenceRunner
     private val follower: TrajectoryFollower
-    private val leftFront: DcMotorEx
-    private val leftRear: DcMotorEx
-    private val rightRear: DcMotorEx
-    private val rightFront: DcMotorEx
-    private val motors: List<DcMotorEx>
-    private val imu: IMU
-    private val batteryVoltageSensor: VoltageSensor
     private val lastEncPositions: MutableList<Int> = ArrayList()
     private val lastEncVels: MutableList<Int> = ArrayList()
 
@@ -59,46 +43,14 @@ class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
             TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
             Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5
         )
-        LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap)
-        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next()
-        for (module in hardwareMap.getAll(LynxModule::class.java)) {
-            module.bulkCachingMode = LynxModule.BulkCachingMode.AUTO
-        }
 
-        // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(IMU::class.java, "imu")
-        val parameters = IMU.Parameters(
-            RevHubOrientationOnRobot(
-                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR
-            )
-        )
-        imu.initialize(parameters)
-        leftFront = hardwareMap.get(DcMotorEx::class.java, "leftFront")
-        leftRear = hardwareMap.get(DcMotorEx::class.java, "leftRear")
-        rightRear = hardwareMap.get(DcMotorEx::class.java, "rightRear")
-        rightFront = hardwareMap.get(DcMotorEx::class.java, "rightFront")
-        motors = listOf(leftFront, leftRear, rightRear, rightFront)
-        for (motor in motors) {
-            val motorConfigurationType = motor.motorType.clone()
-            motorConfigurationType.achieveableMaxRPMFraction = 1.0
-            motor.motorType = motorConfigurationType
-        }
-        if (DriveConstants.RUN_USING_ENCODER) {
-            setMode(RunMode.RUN_USING_ENCODER)
-        }
-        setZeroPowerBehavior(ZeroPowerBehavior.BRAKE)
-        if (DriveConstants.RUN_USING_ENCODER && DriveConstants.MOTOR_VELO_PID != null) {
-            setPIDFCoefficients(RunMode.RUN_USING_ENCODER, DriveConstants.MOTOR_VELO_PID)
-        }
-
-        // TODO: reverse any motors using DcMotor.setDirection()
         val lastTrackingEncPositions: List<Int> = ArrayList()
         val lastTrackingEncVels: List<Int> = ArrayList()
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
         trajectorySequenceRunner = TrajectorySequenceRunner(
-            follower, HEADING_PID, batteryVoltageSensor,
+            follower, HEADING_PID, hardware.batteryVoltageSensor,
             lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         )
     }
@@ -149,7 +101,7 @@ class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
         waitForIdle()
     }
 
-    private fun followTrajectorySequenceAsync(trajectorySequence: TrajectorySequence?) {
+    fun followTrajectorySequenceAsync(trajectorySequence: TrajectorySequence?) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence)
     }
 
@@ -174,27 +126,11 @@ class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
     val isBusy: Boolean
         get() = trajectorySequenceRunner.isBusy
 
-    fun setMode(runMode: RunMode?) {
-        for (motor in motors) {
-            motor.mode = runMode
-        }
-    }
-
-    private fun setZeroPowerBehavior(zeroPowerBehavior: ZeroPowerBehavior) {
-        for (motor in motors) {
-            motor.zeroPowerBehavior = zeroPowerBehavior
-        }
-    }
-
-    fun setPIDFCoefficients(runMode: RunMode?, coefficients: PIDFCoefficients?) {
-        val compensatedCoefficients = PIDFCoefficients(
-            coefficients!!.p, coefficients.i, coefficients.d,
-            coefficients.f * 12 / batteryVoltageSensor.voltage
-        )
-        for (motor in motors) {
-            motor.setPIDFCoefficients(runMode, compensatedCoefficients)
-        }
-    }
+//    fun setMode(runMode: RunMode?) {
+//        for (motor in motors) {
+//            motor.mode = runMode
+//        }
+//    }
 
     fun setWeightedDrivePower(drivePower: Pose2d) {
         var vel = drivePower
@@ -215,7 +151,7 @@ class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
     override fun getWheelPositions(): List<Double> {
         lastEncPositions.clear()
         val wheelPositions: MutableList<Double> = ArrayList()
-        for (motor in motors) {
+        for (motor in hardware.motors) {
             val position = motor.currentPosition
             lastEncPositions.add(position)
             wheelPositions.add(DriveConstants.encoderTicksToInches(position.toDouble()))
@@ -226,7 +162,7 @@ class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
     override fun getWheelVelocities(): List<Double> {
         lastEncVels.clear()
         val wheelVelocities: MutableList<Double> = ArrayList()
-        for (motor in motors) {
+        for (motor in hardware.motors) {
             val vel = motor.velocity.toInt()
             lastEncVels.add(vel)
             wheelVelocities.add(DriveConstants.encoderTicksToInches(vel.toDouble()))
@@ -235,18 +171,14 @@ class SampleMecanumDrive(hardwareMap: HardwareMap) : MecanumDrive(
     }
 
     override fun setMotorPowers(frontLeft: Double, rearLeft: Double, rearRight: Double, frontRight: Double) {
-        leftFront.power = frontLeft
-        leftRear.power = rearLeft
-        rightRear.power = rearRight
-        rightFront.power = frontRight
+        hardware.setMotorPowers(frontLeft, rearLeft, rearRight, frontRight)
     }
 
     override val rawExternalHeading: Double
-        get() = imu.robotYawPitchRollAngles.getYaw(AngleUnit.RADIANS)
+        get() = hardware.rawExternalHeading
 
-    override fun getExternalHeadingVelocity(): Double {
-        return imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate.toDouble()
-    }
+    override fun getExternalHeadingVelocity(): Double =
+        hardware.externalHeadingVelocity
 
     companion object {
         var TRANSLATIONAL_PID = PIDCoefficients(0.0, 0.0, 0.0)

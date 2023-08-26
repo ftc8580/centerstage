@@ -10,8 +10,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.MovingStatistics
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.internal.system.Misc
-import org.firstinspires.ftc.teamcode.drive.DriveConstants
+import org.firstinspires.ftc.teamcode.config.CDConfig
+import org.firstinspires.ftc.teamcode.config.DriveConstants
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import kotlin.math.sqrt
 
 /*
@@ -30,7 +32,7 @@ class TrackWidthTuner : LinearOpMode() {
     override fun runOpMode() {
         val telemetry: Telemetry =
             MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
-        val drive = SampleMecanumDrive(hardwareMap)
+        val drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         // TODO: if you haven't already, set the localizer to something that doesn't depend on
         // drive encoders for computing the heading
         telemetry.addLine("Press play to begin the track width tuner routine")

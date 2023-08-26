@@ -4,7 +4,9 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -13,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 class SplineTest : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        val drive = SampleMecanumDrive(hardwareMap)
+        val drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         waitForStart()
         if (isStopRequested) return
         val traj = drive.trajectoryBuilder(Pose2d())
