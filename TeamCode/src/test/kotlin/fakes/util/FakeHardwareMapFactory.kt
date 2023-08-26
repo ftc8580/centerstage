@@ -67,8 +67,6 @@ class FakeHardwareMapFactory {
             addAllRevBlinkinLedDrivers(doc)
             addAllDistanceSensors(doc)
 
-            // FIXME: Add implementations for things we don't support, but need:
-            // IMU, LynxColorSensor, RevColorSensorV3, AnalogInput
             hardwareMap.voltageSensor.put("Voltage Sensor", FakeVoltageSensor())
         }
 
@@ -78,8 +76,6 @@ class FakeHardwareMapFactory {
                 override fun addDeviceToHardwareMap(name: String?, portNumber: Int) {
                     val fakeDistanceSensor = FakeDistanceSensor()
                     hardwareMap.put(name, fakeDistanceSensor)
-
-                    // No DeviceMapping for the Rev2mDistanceSensor
                 }
             })
         }
@@ -140,7 +136,6 @@ class FakeHardwareMapFactory {
         }
 
         private fun addAllServos(doc: Document) {
-            // FIXME: We don't yet support ContinuousRotationServo or RevSPARKMini
             val servos: NodeList = doc.getElementsByTagName(SERVO_TAG_NAME)
             addDevices(servos, object : DeviceFromXml {
                 override fun addDeviceToHardwareMap(name: String?, portNumber: Int) {
