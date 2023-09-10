@@ -80,9 +80,9 @@ class CDTeleop : OpModeBase() {
 
         mecanumDrive.setDrivePower(
             Pose2d(
-                -gamepad1.left_stick_y.toDouble(),
-                -gamepad1.left_stick_x.toDouble(),
-                -gamepad1.right_stick_x.toDouble()
+                gamepad1.left_stick_y.toDouble() * driveSpeedScale,
+                gamepad1.left_stick_x.toDouble() * driveSpeedScale,
+                gamepad1.right_stick_x.toDouble() * driveSpeedScale
             )
         )
 
@@ -96,5 +96,9 @@ class CDTeleop : OpModeBase() {
 //        carousel.setPower(gamepad1.left_trigger - gamepad1.right_trigger)
 //
 //        turretCap.setExtendPower(-gamepad2.right_stick_y)
+    }
+
+    companion object {
+        const val driveSpeedScale = 0.5
     }
 }

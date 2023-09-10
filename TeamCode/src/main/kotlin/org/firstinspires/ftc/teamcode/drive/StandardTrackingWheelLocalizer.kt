@@ -39,17 +39,17 @@ class StandardTrackingWheelLocalizer(
     init {
         leftEncoder = Encoder(
             hardwareMap.get(
-                DcMotorEx::class.java, "leftEncoder"
+                DcMotorEx::class.java, "leftFront"
             )
         )
         rightEncoder = Encoder(
             hardwareMap.get(
-                DcMotorEx::class.java, "rightEncoder"
+                DcMotorEx::class.java, "rightFront"
             )
         )
         frontEncoder = Encoder(
             hardwareMap.get(
-                DcMotorEx::class.java, "frontEncoder"
+                DcMotorEx::class.java, "rightRear"
             )
         )
 

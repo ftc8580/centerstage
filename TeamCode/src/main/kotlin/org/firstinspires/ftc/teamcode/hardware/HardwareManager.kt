@@ -18,8 +18,8 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     private lateinit var rightRearMotor: DcMotorEx
     private lateinit var rightFrontMotor: DcMotorEx
     lateinit var motors: List<DcMotorEx>
-    lateinit var grabberServo: Servo
-    lateinit var grabberExtendServo: Servo
+//    lateinit var grabberServo: Servo
+//    lateinit var grabberExtendServo: Servo
     lateinit var leftEncoder: Encoder
     lateinit var rightEncoder: Encoder
     lateinit var frontEncoder: Encoder
@@ -49,13 +49,13 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
 
     private fun initializeWheelLocalizers(hardware: HardwareMap) {
         leftEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.wheelLocalizers.leftEncoder)
+            hardware.get(DcMotorEx::class.java, config.driveMotors.leftFront)
         )
         rightEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.wheelLocalizers.rightEncoder)
+            hardware.get(DcMotorEx::class.java, config.driveMotors.rightFront)
         )
         frontEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.wheelLocalizers.frontEncoder)
+            hardware.get(DcMotorEx::class.java, config.driveMotors.rightRear)
         )
     }
 
@@ -84,8 +84,8 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
 
     private fun initializeServos(hardware: HardwareMap) {
         // TODO: For example purposes only, replace these with real hardware
-        grabberExtendServo = hardware.get(Servo::class.java, "servoExtend")
-        grabberServo = hardware.get(Servo::class.java, "servoGrab")
+//        grabberExtendServo = hardware.get(Servo::class.java, "servoExtend")
+//        grabberServo = hardware.get(Servo::class.java, "servoGrab")
     }
 
     val rawExternalHeading: Double

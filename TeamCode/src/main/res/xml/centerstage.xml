@@ -8,19 +8,16 @@
     <!-- TODO: Update all of these with relevant devices/assignments & port numbers -->
     <LynxUsbDevice name="Control Hub" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Main Hub" port="173">
-            <Motor name="leftFront"  port="0" /> <!-- Red    -->
-            <Motor name="leftRear"   port="1" /> <!-- Orange -->
-            <Motor name="rightFront" port="2" /> <!-- Yellow -->
-            <Motor name="rightRear"  port="3" /> <!-- Green  -->
+            <Motor name="leftFront"  port="0" />
+            <Motor name="rightFront"   port="1" />
+            <Motor name="rightRear" port="2" />
+            <Motor name="leftRear"  port="3" />
         </LynxModule>
 
+        <!--
         <LynxModule name="Expansion Hub" port="2">
-            <Motor name="leftEncoder"  port="0" />
-            <Motor name="rightEncoder" port="1" />
-            <Motor name="frontEncoder" port="2" />
 
-            <Servo name="servoExtend"     port="3" />
-            <Servo name="servoGrab" port="4" />
         </LynxModule>
+        -->
     </LynxUsbDevice>
 </Robot>
