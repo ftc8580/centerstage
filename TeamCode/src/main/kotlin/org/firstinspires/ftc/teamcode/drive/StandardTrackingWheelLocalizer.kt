@@ -36,6 +36,9 @@ class StandardTrackingWheelLocalizer(
     private val rightEncoder: Encoder
     private val frontEncoder: Encoder
 
+    private var xMultiplier = 1
+    private var yMultiplier = 1
+
     init {
         leftEncoder = Encoder(
             hardwareMap.get(
@@ -65,9 +68,9 @@ class StandardTrackingWheelLocalizer(
         lastEncPositions.add(rightPos)
         lastEncPositions.add(frontPos)
         return listOf(
-            encoderTicksToInches(leftPos.toDouble()),
-            encoderTicksToInches(rightPos.toDouble()),
-            encoderTicksToInches(frontPos.toDouble())
+            encoderTicksToInches(leftPos.toDouble()) * xMultiplier,
+            encoderTicksToInches(rightPos.toDouble()) * xMultiplier,
+            encoderTicksToInches(frontPos.toDouble()) * yMultiplier
         )
     }
 
@@ -80,18 +83,18 @@ class StandardTrackingWheelLocalizer(
         lastEncVels.add(rightVel)
         lastEncVels.add(frontVel)
         return listOf(
-            encoderTicksToInches(leftVel.toDouble()),
-            encoderTicksToInches(rightVel.toDouble()),
-            encoderTicksToInches(frontVel.toDouble())
+            encoderTicksToInches(leftVel.toDouble()) * xMultiplier,
+            encoderTicksToInches(rightVel.toDouble()) * xMultiplier,
+            encoderTicksToInches(frontVel.toDouble()) * yMultiplier
         )
     }
 
     companion object {
-        var TICKS_PER_REV = 0.0
-        var WHEEL_RADIUS = 2.0 // in
+        var TICKS_PER_REV = 8192.0
+        var WHEEL_RADIUS = 0.6889764 // in
         var GEAR_RATIO = 1.0 // output (wheel) speed / input (encoder) speed
-        var LATERAL_DISTANCE = 10.0 // in; distance between the left and right wheels
-        var FORWARD_OFFSET = 4.0 // in; offset of the lateral wheel
+        var LATERAL_DISTANCE = 9.5 // in; distance between the left and right wheels
+        var FORWARD_OFFSET = 2.75 // in; offset of the lateral wheel
         fun encoderTicksToInches(ticks: Double): Double {
             return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV
         }

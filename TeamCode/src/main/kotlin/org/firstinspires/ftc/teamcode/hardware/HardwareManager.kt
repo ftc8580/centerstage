@@ -5,13 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.util.Encoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 
-class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
+class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap) {
     lateinit var batteryVoltageSensor: VoltageSensor
     private lateinit var leftFrontMotor: DcMotorEx
     private lateinit var leftRearMotor: DcMotorEx
@@ -25,12 +24,12 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     lateinit var frontEncoder: Encoder
 
     init {
-        systemCheck(hardware)
-        initializeBatteryVoltageSensor(hardware)
-        initializeLynxModules(hardware)
-        initializeWheelLocalizers(hardware)
-        initializeDriveMotors(hardware)
-        initializeServos(hardware)
+        systemCheck(hardwareMap)
+        initializeBatteryVoltageSensor(hardwareMap)
+        initializeLynxModules(hardwareMap)
+        initializeWheelLocalizers(hardwareMap)
+        initializeDriveMotors(hardwareMap)
+        initializeServos(hardwareMap)
     }
 
     private fun systemCheck(hardware: HardwareMap)  {

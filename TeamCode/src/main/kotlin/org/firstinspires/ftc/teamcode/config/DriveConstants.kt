@@ -21,8 +21,8 @@ object DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    const val TICKS_PER_REV = 1.0
-    const val MAX_RPM = 1.0
+    const val TICKS_PER_REV = 8192.0
+    const val MAX_RPM = 10000.0
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
@@ -46,9 +46,9 @@ object DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    var WHEEL_RADIUS = 2.0 // in
+    var WHEEL_RADIUS = 0.6889764 // in
     var GEAR_RATIO = 1.0 // output (wheel) speed / input (motor) speed
-    var TRACK_WIDTH = 1.0 // in
+    var TRACK_WIDTH = 13.5 // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using

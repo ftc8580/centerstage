@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.drive.MecanumDrive
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.acmerobotics.roadrunner.localization.Localizer
 import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint
@@ -37,6 +38,12 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     private val follower: TrajectoryFollower
     private val lastEncPositions: MutableList<Int> = ArrayList()
     private val lastEncVels: MutableList<Int> = ArrayList()
+
+    override var localizer = StandardTrackingWheelLocalizer(
+        hardwareMap = hardware.hardwareMap,
+        lastEncPositions = lastEncPositions,
+        lastEncVels = lastEncVels
+    ) as Localizer
 
     init {
         follower = HolonomicPIDVAFollower(

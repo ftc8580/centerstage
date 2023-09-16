@@ -24,9 +24,9 @@ class LocalizationTest : LinearOpMode() {
         while (!isStopRequested) {
             drive.setWeightedDrivePower(
                 Pose2d(
-                    -gamepad1.left_stick_y.toDouble(),
-                    -gamepad1.left_stick_x.toDouble(),
-                    -gamepad1.right_stick_x.toDouble()
+                    gamepad1.left_stick_y.toDouble(),
+                    gamepad1.left_stick_x.toDouble(),
+                    gamepad1.right_stick_x.toDouble()
                 )
             )
             drive.update()

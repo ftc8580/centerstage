@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot type="FirstInspires-FTC">
     <!-- TODO: Update this -->
-    <Webcam name="webcam" serialNumber="7B2F4FD0" />
+    <Webcam name="webcam" serialNumber="314C2B90" />
 
     <!-- Control Hub #1 -->
 
