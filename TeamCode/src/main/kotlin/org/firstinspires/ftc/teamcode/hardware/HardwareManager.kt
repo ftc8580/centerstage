@@ -22,7 +22,6 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     lateinit var leftEncoder: Encoder
     lateinit var rightEncoder: Encoder
     lateinit var frontEncoder: Encoder
-
     init {
         systemCheck(hardwareMap)
         initializeBatteryVoltageSensor(hardwareMap)
