@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware
 
+
+
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
@@ -9,7 +11,9 @@ import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.util.Encoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
-
+// Webcam stuff
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap) {
     lateinit var batteryVoltageSensor: VoltageSensor
     private lateinit var leftFrontMotor: DcMotorEx
@@ -17,6 +21,8 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     private lateinit var rightRearMotor: DcMotorEx
     private lateinit var rightFrontMotor: DcMotorEx
     lateinit var motors: List<DcMotorEx>
+    lateinit var webcam: WebcamName
+    lateinit var cameraDirection: BuiltinCameraDirection
 //    lateinit var grabberServo: Servo
 //    lateinit var grabberExtendServo: Servo
     lateinit var leftEncoder: Encoder
@@ -29,6 +35,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         initializeWheelLocalizers(hardwareMap)
         initializeDriveMotors(hardwareMap)
         initializeServos(hardwareMap)
+        initializeWebcam(hardwareMap)
     }
 
     private fun systemCheck(hardware: HardwareMap)  {
@@ -79,7 +86,10 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
             motor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
         }
     }
-
+    private fun initializeWebcam(hardware: HardwareMap) {
+        webcam = hardware.get(WebcamName::class.java, "webcam" )
+        cameraDirection = BuiltinCameraDirection.BACK
+    }
     private fun initializeServos(hardware: HardwareMap) {
         // TODO: For example purposes only, replace these with real hardware
 //        grabberExtendServo = hardware.get(Servo::class.java, "servoExtend")

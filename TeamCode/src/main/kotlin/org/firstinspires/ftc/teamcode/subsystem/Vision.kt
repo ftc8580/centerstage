@@ -1,19 +1,14 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 // Hardware
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 // Vision
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import org.firstinspires.ftc.vision.VisionPortal
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor
 import org.firstinspires.ftc.vision.tfod.TfodProcessor
-
-// Op Mode Stuff
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 /*
  * This OpMode illustrates the basics of using both AprilTag recognition and TensorFlow
@@ -24,9 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
  */
 
 
-@TeleOp(name = "Vision Subsystem Test", group = "Subsystems")
-//@Disabled
-class ConceptDoubleVision : LinearOpMode() {
+class Vision (private val hardware:HardwareManager, private val telemetry: MultipleTelemetry){
     /**
      * The variable to store our instance of the AprilTag processor.
      */
@@ -41,48 +34,6 @@ class ConceptDoubleVision : LinearOpMode() {
      * The variable to store our instance of the vision portal.
      */
     private var myVisionPortal: VisionPortal? = null
-    override fun runOpMode() {
-        initDoubleVision()
-        // This OpMode loops continuously, allowing the user to switch between
-        // AprilTag and TensorFlow Object Detection (TFOD) image processors.
-        while (!isStopRequested) {
-            if (opModeInInit()) {
-                telemetry.addData("DS preview on/off", "3 dots, Camera Stream")
-                telemetry.addLine()
-                telemetry.addLine("----------------------------------------")
-            }
-            if (myVisionPortal!!.getProcessorEnabled(aprilTag)) {
-                // User instructions: Dpad left or Dpad right.
-                telemetry.addLine("Dpad Left to disable AprilTag")
-                telemetry.addLine()
-                telemetryAprilTag()
-            } else {
-                telemetry.addLine("Dpad Right to enable AprilTag")
-            }
-            telemetry.addLine()
-            telemetry.addLine("----------------------------------------")
-            if (myVisionPortal!!.getProcessorEnabled(tfod)) {
-                telemetry.addLine("Dpad Down to disable TFOD")
-                telemetry.addLine()
-                telemetryTfod()
-            } else {
-                telemetry.addLine("Dpad Up to enable TFOD")
-            }
-            // Push telemetry to the Driver Station.
-            telemetry.update()
-            if (gamepad1.dpad_left) {
-                myVisionPortal!!.setProcessorEnabled(aprilTag, false)
-            } else if (gamepad1.dpad_right) {
-                myVisionPortal!!.setProcessorEnabled(aprilTag, true)
-            }
-            if (gamepad1.dpad_down) {
-                myVisionPortal!!.setProcessorEnabled(tfod, false)
-            } else if (gamepad1.dpad_up) {
-                myVisionPortal!!.setProcessorEnabled(tfod, true)
-            }
-            sleep(20)
-        } // end while loop
-    } // end method runOpMode()
 
     /**
      * Initialize AprilTag and TFOD.
@@ -92,27 +43,20 @@ class ConceptDoubleVision : LinearOpMode() {
         // AprilTag Configuration
         // -----------------------------------------------------------------------------------------
         aprilTag = AprilTagProcessor.Builder()
-                .build()
+            .build()
 
         // -----------------------------------------------------------------------------------------
         // TFOD Configuration
         // -----------------------------------------------------------------------------------------
         tfod = TfodProcessor.Builder().setModelFileName("/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite") //TODO Update Model
-                .build()
+            .build()
         // -----------------------------------------------------------------------------------------
         // Camera Configuration
         // -----------------------------------------------------------------------------------------
-        myVisionPortal = if (USE_WEBCAM) {
-            VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName::class.java, "webcam"))
-                    .addProcessors(tfod, aprilTag)
-                    .build()
-        } else {
-            VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessors(tfod, aprilTag)
-                    .build()
-        }
+        myVisionPortal = VisionPortal.Builder()
+            .setCamera(hardware.webcam)
+            .addProcessors(tfod, aprilTag)
+            .build()
     } // end initDoubleVision()
 
     /**
