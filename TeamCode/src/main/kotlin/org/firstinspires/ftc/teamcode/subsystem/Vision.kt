@@ -19,26 +19,26 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor
  */
 
 
-class Vision (private val hardware:HardwareManager, private val telemetry: MultipleTelemetry){
+class Vision (private val hardware:HardwareManager, private val telemetry: MultipleTelemetry, private val tfliteModelFileName:String, private val tfliteLabels:List<String>){
     /**
      * The variable to store our instance of the AprilTag processor.
      */
-    private var aprilTag: AprilTagProcessor? = null
+    var aprilTag: AprilTagProcessor? = null
 
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
-    private var tfod: TfodProcessor? = null
+    var tfod: TfodProcessor? = null
 
     /**
      * The variable to store our instance of the vision portal.
      */
-    private var myVisionPortal: VisionPortal? = null
+    var myVisionPortal: VisionPortal? = null
 
     /**
      * Initialize AprilTag and TFOD.
      */
-    private fun initDoubleVision() {
+    fun initDoubleVision() {
         // -----------------------------------------------------------------------------------------
         // AprilTag Configuration
         // -----------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ class Vision (private val hardware:HardwareManager, private val telemetry: Multi
         // -----------------------------------------------------------------------------------------
         // TFOD Configuration
         // -----------------------------------------------------------------------------------------
-        tfod = TfodProcessor.Builder().setModelFileName("/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite") //TODO Update Model
+        tfod = TfodProcessor.Builder().setModelLabels(tfliteLabels).setModelFileName(tfliteModelFileName)
             .build()
         // -----------------------------------------------------------------------------------------
         // Camera Configuration
@@ -62,7 +62,7 @@ class Vision (private val hardware:HardwareManager, private val telemetry: Multi
     /**
      * Add telemetry about AprilTag detections.
      */
-    private fun telemetryAprilTag() {
+    fun telemetryAprilTag() {
         val currentDetections: List<AprilTagDetection> = aprilTag!!.detections
         telemetry.addData("# AprilTags Detected", currentDetections.size)
 
@@ -83,7 +83,7 @@ class Vision (private val hardware:HardwareManager, private val telemetry: Multi
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
-    private fun telemetryTfod() {
+    fun telemetryTfod() {
         val currentRecognitions = tfod!!.recognitions
         telemetry.addData("# Objects Detected", currentRecognitions.size)
 
@@ -95,8 +95,10 @@ class Vision (private val hardware:HardwareManager, private val telemetry: Multi
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.label, recognition.confidence * 100)
             telemetry.addData("- Position", "%.0f / %.0f", x, y)
             telemetry.addData("- Size", "%.0f x %.0f", recognition.width, recognition.height)
+
         } // end for() loop
     } // end method telemetryTfod()
+
 
     companion object {
         private const val USE_WEBCAM = true // true for webcam, false for phone camera

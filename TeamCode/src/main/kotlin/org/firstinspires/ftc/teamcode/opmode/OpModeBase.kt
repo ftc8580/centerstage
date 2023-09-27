@@ -5,17 +5,19 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 
 abstract class OpModeBase : CommandOpMode() {
     lateinit var hardware: HardwareManager
     lateinit var mecanumDrive: SampleMecanumDrive
     lateinit var driverGamepad: GamepadEx
     lateinit var accessoryGamepad: GamepadEx
+    lateinit var multitelemetry: MultipleTelemetry
 
     fun initHardware(isAuto: Boolean) {
         hardware = HardwareManager(CDConfig(), hardwareMap)
         mecanumDrive = SampleMecanumDrive(hardware)
-
+        multitelemetry = MultipleTelemetry(telemetry)
         // Subsystems
         // deposit = Deposit(hardwareMap, isAuto)
         // intake = Intake(hardwareMap)
