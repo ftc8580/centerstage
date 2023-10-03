@@ -158,7 +158,7 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     override fun getWheelPositions(): List<Double> {
         lastEncPositions.clear()
         val wheelPositions: MutableList<Double> = ArrayList()
-        for (motor in hardware.motors) {
+        for (motor in hardware.driveMotors) {
             val position = motor.currentPosition
             lastEncPositions.add(position)
             wheelPositions.add(DriveConstants.encoderTicksToInches(position.toDouble()))
@@ -169,7 +169,7 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     override fun getWheelVelocities(): List<Double> {
         lastEncVels.clear()
         val wheelVelocities: MutableList<Double> = ArrayList()
-        for (motor in hardware.motors) {
+        for (motor in hardware.driveMotors) {
             val vel = motor.velocity.toInt()
             lastEncVels.add(vel)
             wheelVelocities.add(DriveConstants.encoderTicksToInches(vel.toDouble()))

@@ -16,9 +16,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     private lateinit var leftRearMotor: DcMotorEx
     private lateinit var rightRearMotor: DcMotorEx
     private lateinit var rightFrontMotor: DcMotorEx
-    lateinit var motors: List<DcMotorEx>
-//    lateinit var grabberServo: Servo
-//    lateinit var grabberExtendServo: Servo
+    lateinit var driveMotors: List<DcMotorEx>
     lateinit var leftEncoder: Encoder
     lateinit var rightEncoder: Encoder
     lateinit var frontEncoder: Encoder
@@ -69,9 +67,9 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         rightRearMotor.direction = DcMotorSimple.Direction.REVERSE
         rightFrontMotor.direction = DcMotorSimple.Direction.REVERSE
 
-        motors = listOf(leftFrontMotor, leftRearMotor, rightRearMotor, rightFrontMotor)
+        driveMotors = listOf(leftFrontMotor, leftRearMotor, rightRearMotor, rightFrontMotor)
 
-        for (motor in motors) {
+        for (motor in driveMotors) {
             val motorConfigurationType = motor.motorType.clone()
             motorConfigurationType.achieveableMaxRPMFraction = 1.0
             motor.motorType = motorConfigurationType
@@ -82,9 +80,6 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     }
 
     private fun initializeServos(hardware: HardwareMap) {
-        // TODO: For example purposes only, replace these with real hardware
-//        grabberExtendServo = hardware.get(Servo::class.java, "servoExtend")
-//        grabberServo = hardware.get(Servo::class.java, "servoGrab")
     }
 
     val rawExternalHeading: Double
