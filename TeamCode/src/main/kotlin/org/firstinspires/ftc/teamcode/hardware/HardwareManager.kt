@@ -5,10 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.util.Encoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
+import java.lang.Exception
 
 class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap) {
     lateinit var batteryVoltageSensor: VoltageSensor
@@ -17,9 +19,14 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     private lateinit var rightRearMotor: DcMotorEx
     private lateinit var rightFrontMotor: DcMotorEx
     lateinit var driveMotors: List<DcMotorEx>
-    lateinit var leftEncoder: Encoder
-    lateinit var rightEncoder: Encoder
-    lateinit var frontEncoder: Encoder
+    var viperMotor: DcMotorEx? = null
+    var intakeMotor: DcMotorEx? = null
+    var climbMotor: DcMotorEx? = null
+    var bucketServo: Servo? = null
+    var deployIntakeServo: Servo? = null
+    var leftEncoder: Encoder? = null
+    var rightEncoder: Encoder? = null
+    var frontEncoder: Encoder? = null
 
     init {
         systemCheck(hardwareMap)
@@ -27,6 +34,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         initializeLynxModules(hardwareMap)
         initializeWheelLocalizers(hardwareMap)
         initializeDriveMotors(hardwareMap)
+        initializeSubsystemMotors(hardwareMap)
         initializeServos(hardwareMap)
     }
 
@@ -45,15 +53,16 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     }
 
     private fun initializeWheelLocalizers(hardware: HardwareMap) {
-        leftEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.driveMotors.leftFront)
-        )
-        rightEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.driveMotors.rightFront)
-        )
-        frontEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.driveMotors.rightRear)
-        )
+        val leftEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.leftFront)
+        val rightEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightFront)
+        val frontEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightRear)
+
+        // If any of the encoders are missing, don't initialize any of them
+        if (leftEncoderMotor == null || rightEncoderMotor == null || frontEncoderMotor == null) return
+
+        leftEncoder = Encoder(leftEncoderMotor)
+        rightEncoder = Encoder(rightEncoderMotor)
+        frontEncoder = Encoder(frontEncoderMotor)
     }
 
     private fun initializeDriveMotors(hardware: HardwareMap) {
@@ -79,7 +88,26 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         }
     }
 
+    private fun initializeSubsystemMotors(hardware: HardwareMap) {
+        viperMotor = safelyGetHardware<DcMotorEx>(hardware, config.viperMotor)
+        intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
+        climbMotor = safelyGetHardware<DcMotorEx>(hardware, config.climbMotor)
+    }
+
     private fun initializeServos(hardware: HardwareMap) {
+        bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
+        deployIntakeServo = safelyGetHardware<Servo>(hardware, config.deployIntakeServo)
+    }
+
+    private inline fun <reified T> safelyGetHardware(hardware: HardwareMap, deviceName: String?): T? {
+        if (deviceName.isNullOrBlank()) return null
+
+        return try {
+            hardware.get(T::class.java, deviceName)
+        } catch (e: Exception) {
+            // Ignore exception and return null
+            null
+        }
     }
 
     val rawExternalHeading: Double
