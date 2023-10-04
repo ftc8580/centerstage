@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode.opmode
 
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.Subsystem
-import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.gamepad.GamepadEx
-import com.qualcomm.robotcore.hardware.HardwareDevice
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
-import org.firstinspires.ftc.teamcode.subsystem.Delivery
+import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 import java.lang.Exception
 
 abstract class OpModeBase : CommandOpMode() {
@@ -17,7 +15,7 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var driverGamepad: GamepadEx
     lateinit var accessoryGamepad: GamepadEx
 
-    abstract var deliverySubsystem: Delivery?
+    abstract var deliverySubsystem: DeliverySubsystem?
 
     fun initHardware(isAuto: Boolean) {
         hardware = HardwareManager(CDConfig(), hardwareMap)
@@ -25,7 +23,7 @@ abstract class OpModeBase : CommandOpMode() {
 
         // Subsystems
         deliverySubsystem = try {
-            Delivery(hardware)
+            DeliverySubsystem(hardware)
         } catch (e: Exception) {
             null
         }

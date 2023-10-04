@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
-class Delivery(hardware: HardwareManager) : SubsystemBase() {
+class DeliverySubsystem(hardware: HardwareManager) : SubsystemBase() {
     private var viperMotor: DcMotorEx
     private var bucketServo: Servo
 
@@ -17,10 +17,19 @@ class Delivery(hardware: HardwareManager) : SubsystemBase() {
         bucketServo.position = SERVO_START_POSITION
     }
 
-    fun getBucketServoPosition(): Double = bucketServo.position
-    fun setBucketServoPosition(position: Double) {
-        bucketServo.position = position
+    fun closeBucket() {
+        bucketServo.position = 0.0
     }
+
+    fun openBucket() {
+        bucketServo.position = 1.0
+    }
+
+    fun setHeight(height: Int) {
+        viperMotor.targetPosition = height
+    }
+
+    fun isStopped(): Boolean = !viperMotor.isBusy
 
     companion object {
         // TODO: Check these values
