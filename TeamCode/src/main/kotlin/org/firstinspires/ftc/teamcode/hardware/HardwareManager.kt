@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.hardware
 
 import com.qualcomm.hardware.lynx.LynxModule
+import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.DistanceSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.util.Encoder
@@ -19,14 +22,25 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     private lateinit var rightRearMotor: DcMotorEx
     private lateinit var rightFrontMotor: DcMotorEx
     lateinit var driveMotors: List<DcMotorEx>
+
+    // Subsystem motors
     var viperMotor: DcMotorEx? = null
     var intakeMotor: DcMotorEx? = null
     var climbMotor: DcMotorEx? = null
+
+    // Servos
     var bucketServo: Servo? = null
     var deployIntakeServo: Servo? = null
+
+    // Dead wheels
     var leftEncoder: Encoder? = null
     var rightEncoder: Encoder? = null
     var frontEncoder: Encoder? = null
+
+    // Sensors
+    var touchSensor: TouchSensor? = null
+    var colorSensor: ColorSensor? = null
+    var distanceSensor: DistanceSensor? = null
 
     init {
         systemCheck(hardwareMap)
@@ -36,6 +50,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         initializeDriveMotors(hardwareMap)
         initializeSubsystemMotors(hardwareMap)
         initializeServos(hardwareMap)
+        initializeSensors(hardwareMap)
     }
 
     private fun systemCheck(hardware: HardwareMap)  {
@@ -97,6 +112,12 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     private fun initializeServos(hardware: HardwareMap) {
         bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
         deployIntakeServo = safelyGetHardware<Servo>(hardware, config.deployIntakeServo)
+    }
+
+    private fun initializeSensors(hardware: HardwareMap) {
+        touchSensor = safelyGetHardware<TouchSensor>(hardware, "touchSensor")
+        colorSensor = safelyGetHardware<ColorSensor>(hardware, "colorSensor")
+        distanceSensor = safelyGetHardware<DistanceSensor>(hardware, "distanceSensor")
     }
 
     private inline fun <reified T> safelyGetHardware(hardware: HardwareMap, deviceName: String?): T? {

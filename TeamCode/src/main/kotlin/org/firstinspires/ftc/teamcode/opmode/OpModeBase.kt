@@ -15,7 +15,7 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var driverGamepad: GamepadEx
     lateinit var accessoryGamepad: GamepadEx
 
-    abstract var deliverySubsystem: DeliverySubsystem?
+    private var deliverySubsystem: DeliverySubsystem? = null
 
     fun initHardware(isAuto: Boolean) {
         hardware = HardwareManager(CDConfig(), hardwareMap)
