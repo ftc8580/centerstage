@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware
 
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.ColorSensor
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -78,6 +79,8 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         leftEncoder = Encoder(leftEncoderMotor)
         rightEncoder = Encoder(rightEncoderMotor)
         frontEncoder = Encoder(frontEncoderMotor)
+
+        // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
 
     private fun initializeDriveMotors(hardware: HardwareMap) {
@@ -100,6 +103,9 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
 
             // Set zero power behavior
             motor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+
+            // Run without encoder since we're using dead wheels
+            motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         }
     }
 

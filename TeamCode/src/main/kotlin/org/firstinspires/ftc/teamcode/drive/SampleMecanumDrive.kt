@@ -40,7 +40,7 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     private val lastEncVels: MutableList<Int> = ArrayList()
 
     override var localizer = StandardTrackingWheelLocalizer(
-        hardwareMap = hardware.hardwareMap,
+        hardware = hardware,
         lastEncPositions = lastEncPositions,
         lastEncVels = lastEncVels
     ) as Localizer
@@ -51,11 +51,9 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
             Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5
         )
 
-        val lastTrackingEncPositions: List<Int> = ArrayList()
-        val lastTrackingEncVels: List<Int> = ArrayList()
+        val lastTrackingEncPositions = mutableListOf<Int>()
+        val lastTrackingEncVels = mutableListOf<Int>()
 
-        // TODO: if desired, use setLocalizer() to change the localization method
-        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
         trajectorySequenceRunner = TrajectorySequenceRunner(
             follower, HEADING_PID, hardware.batteryVoltageSensor,
             lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
