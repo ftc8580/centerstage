@@ -91,7 +91,7 @@ class TrackingWheelLateralDistanceTuner : LinearOpMode() {
         var lastHeading = 0.0
         var tuningFinished = false
         while (!isStopRequested && !tuningFinished) {
-            val vel = Pose2d(0.0, 0.0, -gamepad1.right_stick_x.toDouble())
+            val vel = Pose2d(0.0, 0.0, gamepad1.right_stick_x.toDouble())
             drive.setDrivePower(vel)
             drive.update()
             val heading = drive.poseEstimate.heading

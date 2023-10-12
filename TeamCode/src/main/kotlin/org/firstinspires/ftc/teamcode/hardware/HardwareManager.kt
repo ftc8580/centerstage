@@ -80,7 +80,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         rightEncoder = Encoder(rightEncoderMotor)
         frontEncoder = Encoder(frontEncoderMotor)
 
-        // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
+        // frontEncoder!!.direction = Encoder.Direction.REVERSE
     }
 
     private fun initializeDriveMotors(hardware: HardwareMap) {
