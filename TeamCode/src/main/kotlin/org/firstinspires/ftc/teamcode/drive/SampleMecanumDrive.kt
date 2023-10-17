@@ -186,12 +186,12 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
         hardware.externalHeadingVelocity
 
     companion object {
-        var TRANSLATIONAL_PID = PIDCoefficients(0.0, 0.0, 0.0)
-        var HEADING_PID = PIDCoefficients(0.0, 0.0, 0.0)
-        var LATERAL_MULTIPLIER = 1.0
-        var VX_WEIGHT = 1.0
-        var VY_WEIGHT = 1.0
-        var OMEGA_WEIGHT = 1.0
+        @JvmField var TRANSLATIONAL_PID = PIDCoefficients(16.0, 0.0, 0.0)
+        @JvmField var HEADING_PID = PIDCoefficients(25.0, 0.0, 0.0)
+        @JvmField var LATERAL_MULTIPLIER = 1.23
+        @JvmField var VX_WEIGHT = 1.0
+        @JvmField var VY_WEIGHT = 1.0
+        @JvmField var OMEGA_WEIGHT = 1.0
         private val VEL_CONSTRAINT = getVelocityConstraint(
             DriveConstants.MAX_VEL,
             DriveConstants.MAX_ANG_VEL,

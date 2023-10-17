@@ -89,10 +89,10 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         rightRearMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.rightRear)
         rightFrontMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.rightFront)
 
-        leftFrontMotor.direction = DcMotorSimple.Direction.FORWARD
-        leftRearMotor.direction = DcMotorSimple.Direction.FORWARD
-        rightRearMotor.direction = DcMotorSimple.Direction.REVERSE
-        rightFrontMotor.direction = DcMotorSimple.Direction.REVERSE
+        leftFrontMotor.direction = DcMotorSimple.Direction.REVERSE
+        leftRearMotor.direction = DcMotorSimple.Direction.REVERSE
+        rightRearMotor.direction = DcMotorSimple.Direction.FORWARD
+        rightFrontMotor.direction = DcMotorSimple.Direction.FORWARD
 
         driveMotors = listOf(leftFrontMotor, leftRearMotor, rightRearMotor, rightFrontMotor)
 
