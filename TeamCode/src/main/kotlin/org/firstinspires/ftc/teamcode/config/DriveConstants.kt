@@ -18,11 +18,9 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients
  */
 @Config
 object DriveConstants {
-    /*
-     * These are motor constants that should be listed online for your motors.
-     */
-    const val TICKS_PER_REV = 8192.0
-    const val MAX_RPM = 10000.0
+
+    const val TICKS_PER_REV = 537.6
+    const val MAX_RPM = 312.0
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
@@ -32,8 +30,8 @@ object DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-    const val RUN_USING_ENCODER = false
-    var MOTOR_VELO_PID: PIDFCoefficients? = PIDFCoefficients(
+    @JvmField var RUN_USING_ENCODER = false
+    @JvmField var MOTOR_VELO_PID: PIDFCoefficients? = PIDFCoefficients(
         0.0, 0.0, 0.0,
         getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV)
     )
@@ -46,9 +44,9 @@ object DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    var WHEEL_RADIUS = 0.6889764 // in
-    var GEAR_RATIO = 1.0 // output (wheel) speed / input (motor) speed
-    var TRACK_WIDTH = 13.5 // in
+    @JvmField var WHEEL_RADIUS = 1.88976 // in
+    @JvmField var GEAR_RATIO = 1.0 // output (wheel) speed / input (motor) speed
+    @JvmField var TRACK_WIDTH = 14.3 // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -56,9 +54,9 @@ object DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    var kV = 1.0 / rpmToVelocity(MAX_RPM)
-    var kA = 0.0
-    var kStatic = 0.0
+    @JvmField var kV = 0.0182
+    @JvmField var kA = 0.0022
+    @JvmField var kStatic = 0.0
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -67,16 +65,17 @@ object DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    var MAX_VEL = 30.0
-    var MAX_ACCEL = 30.0
-    var MAX_ANG_VEL = Math.toRadians(60.0)
-    var MAX_ANG_ACCEL = Math.toRadians(60.0)
+    @JvmField var MAX_VEL = 45.0
+    @JvmField var MAX_ACCEL = 45.0
+    @JvmField var MAX_ANG_VEL = Math.toRadians(208.94533694100002)
+    @JvmField var MAX_ANG_ACCEL = Math.toRadians(180.0)
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
      */
-    var LOGO_FACING_DIR = LogoFacingDirection.UP
-    var USB_FACING_DIR = UsbFacingDirection.FORWARD
+    @JvmField var LOGO_FACING_DIR = LogoFacingDirection.UP
+    @JvmField var USB_FACING_DIR = UsbFacingDirection.FORWARD
+
     fun encoderTicksToInches(ticks: Double): Double {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV
     }

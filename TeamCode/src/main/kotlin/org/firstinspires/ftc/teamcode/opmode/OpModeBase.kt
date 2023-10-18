@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
+import com.arcrobotics.ftclib.command.Subsystem
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
+import java.lang.Exception
 
 abstract class OpModeBase : CommandOpMode() {
     lateinit var hardware: HardwareManager
@@ -14,17 +17,24 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var accessoryGamepad: GamepadEx
     lateinit var multitelemetry: MultipleTelemetry
 
+    private var deliverySubsystem: DeliverySubsystem? = null
+
     fun initHardware(isAuto: Boolean) {
         hardware = HardwareManager(CDConfig(), hardwareMap)
         mecanumDrive = SampleMecanumDrive(hardware)
         multitelemetry = MultipleTelemetry(telemetry)
         // Subsystems
-        // deposit = Deposit(hardwareMap, isAuto)
-        // intake = Intake(hardwareMap)
-        // carousel = Carousel(hardwareMap)
-        // turretCap = TurretCap(hardwareMap, isAuto)
+        deliverySubsystem = try {
+            DeliverySubsystem(hardware)
+        } catch (e: Exception) {
+            null
+        }
 
-        // register(intake, deposit, carousel, turretCap)
+        val subsystems = listOf<Subsystem?>(
+            deliverySubsystem
+        )
+
+        register(*subsystems.filterNotNull().toTypedArray())
 
         driverGamepad = GamepadEx(gamepad1)
         accessoryGamepad = GamepadEx(gamepad2)

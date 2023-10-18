@@ -21,7 +21,7 @@ class Encoder @JvmOverloads constructor(
     /**
      * Allows you to set the direction of the counts and velocity without modifying the motor's direction state
      */
-    private var direction = Direction.FORWARD
+    var direction = Direction.FORWARD
 
     private var lastPosition: Int = 0
     private var velocityEstimateIdx = 0

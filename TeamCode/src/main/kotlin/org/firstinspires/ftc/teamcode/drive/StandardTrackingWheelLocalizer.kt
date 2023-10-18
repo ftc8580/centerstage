@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.drive
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.util.Encoder
 
 /*
@@ -22,7 +21,7 @@ import org.firstinspires.ftc.teamcode.util.Encoder
  */
 @Config
 class StandardTrackingWheelLocalizer(
-    hardwareMap: HardwareMap,
+    hardware: HardwareManager,
     private val lastEncPositions: MutableList<Int>,
     private val lastEncVels: MutableList<Int>
 ) : ThreeTrackingWheelLocalizer(
@@ -32,32 +31,12 @@ class StandardTrackingWheelLocalizer(
         Pose2d(FORWARD_OFFSET, 0.0, Math.toRadians(90.0)) // front
     )
 ) {
-    private val leftEncoder: Encoder
-    private val rightEncoder: Encoder
-    private val frontEncoder: Encoder
+    private val leftEncoder: Encoder = hardware.leftEncoder!!
+    private val rightEncoder: Encoder = hardware.rightEncoder!!
+    private val frontEncoder: Encoder = hardware.frontEncoder!!
 
-    private var xMultiplier = 1
-    private var yMultiplier = 1
-
-    init {
-        leftEncoder = Encoder(
-            hardwareMap.get(
-                DcMotorEx::class.java, "leftFront"
-            )
-        )
-        rightEncoder = Encoder(
-            hardwareMap.get(
-                DcMotorEx::class.java, "rightFront"
-            )
-        )
-        frontEncoder = Encoder(
-            hardwareMap.get(
-                DcMotorEx::class.java, "rightRear"
-            )
-        )
-
-        // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
-    }
+    private var xMultiplier = 1.03224
+    private var yMultiplier = 1.02974
 
     override fun getWheelPositions(): List<Double> {
         val leftPos = leftEncoder.currentPosition
@@ -91,10 +70,10 @@ class StandardTrackingWheelLocalizer(
 
     companion object {
         var TICKS_PER_REV = 8192.0
-        var WHEEL_RADIUS = 0.6889764 // in
+        var WHEEL_RADIUS = 0.6915 // in
         var GEAR_RATIO = 1.0 // output (wheel) speed / input (encoder) speed
-        var LATERAL_DISTANCE = 9.5 // in; distance between the left and right wheels
-        var FORWARD_OFFSET = 2.75 // in; offset of the lateral wheel
+        var LATERAL_DISTANCE = 12.5 // in; distance between the left and right wheels
+        var FORWARD_OFFSET = -6.5 // in; offset of the lateral wheel
         fun encoderTicksToInches(ticks: Double): Double {
             return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV
         }

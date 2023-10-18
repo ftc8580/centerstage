@@ -3,39 +3,65 @@ package org.firstinspires.ftc.teamcode.hardware
 
 
 import com.qualcomm.hardware.lynx.LynxModule
+import com.qualcomm.robotcore.hardware.ColorSensor
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.DistanceSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.util.Encoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
-// Webcam stuff
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import java.lang.Exception
+
 class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap) {
     lateinit var batteryVoltageSensor: VoltageSensor
     private lateinit var leftFrontMotor: DcMotorEx
     private lateinit var leftRearMotor: DcMotorEx
     private lateinit var rightRearMotor: DcMotorEx
     private lateinit var rightFrontMotor: DcMotorEx
-    lateinit var motors: List<DcMotorEx>
+
+    lateinit var driveMotors: List<DcMotorEx>
+
+    // Subsystem motors
+    var viperMotor: DcMotorEx? = null
+    var intakeMotor: DcMotorEx? = null
+    var climbMotor: DcMotorEx? = null
+
+    // Servos
+    var bucketServo: Servo? = null
+    var deployIntakeServo: Servo? = null
+
+    // Dead wheels
+    var leftEncoder: Encoder? = null
+    var rightEncoder: Encoder? = null
+    var frontEncoder: Encoder? = null
+
+    // Sensors
+    var touchSensor: TouchSensor? = null
+    var colorSensor: ColorSensor? = null
+    var distanceSensor: DistanceSensor? = null
+
+    // Vision
     lateinit var webcam: WebcamName
     lateinit var cameraDirection: BuiltinCameraDirection
-//    lateinit var grabberServo: Servo
-//    lateinit var grabberExtendServo: Servo
-    lateinit var leftEncoder: Encoder
-    lateinit var rightEncoder: Encoder
-    lateinit var frontEncoder: Encoder
+
     init {
         systemCheck(hardwareMap)
         initializeBatteryVoltageSensor(hardwareMap)
         initializeLynxModules(hardwareMap)
         initializeWheelLocalizers(hardwareMap)
         initializeDriveMotors(hardwareMap)
+        initializeSubsystemMotors(hardwareMap)
         initializeServos(hardwareMap)
         initializeWebcam(hardwareMap)
+        initializeSensors(hardwareMap)
     }
 
     private fun systemCheck(hardware: HardwareMap)  {
@@ -53,15 +79,18 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     }
 
     private fun initializeWheelLocalizers(hardware: HardwareMap) {
-        leftEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.driveMotors.leftFront)
-        )
-        rightEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.driveMotors.rightFront)
-        )
-        frontEncoder = Encoder(
-            hardware.get(DcMotorEx::class.java, config.driveMotors.rightRear)
-        )
+        val leftEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.leftFront)
+        val rightEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightFront)
+        val frontEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightRear)
+
+        // If any of the encoders are missing, don't initialize any of them
+        if (leftEncoderMotor == null || rightEncoderMotor == null || frontEncoderMotor == null) return
+
+        leftEncoder = Encoder(leftEncoderMotor)
+        rightEncoder = Encoder(rightEncoderMotor)
+        frontEncoder = Encoder(frontEncoderMotor)
+
+        // frontEncoder!!.direction = Encoder.Direction.REVERSE
     }
 
     private fun initializeDriveMotors(hardware: HardwareMap) {
@@ -70,30 +99,57 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         rightRearMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.rightRear)
         rightFrontMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.rightFront)
 
-        leftFrontMotor.direction = DcMotorSimple.Direction.FORWARD
-        leftRearMotor.direction = DcMotorSimple.Direction.FORWARD
-        rightRearMotor.direction = DcMotorSimple.Direction.REVERSE
-        rightFrontMotor.direction = DcMotorSimple.Direction.REVERSE
+        leftFrontMotor.direction = DcMotorSimple.Direction.REVERSE
+        leftRearMotor.direction = DcMotorSimple.Direction.REVERSE
+        rightRearMotor.direction = DcMotorSimple.Direction.FORWARD
+        rightFrontMotor.direction = DcMotorSimple.Direction.FORWARD
 
-        motors = listOf(leftFrontMotor, leftRearMotor, rightRearMotor, rightFrontMotor)
+        driveMotors = listOf(leftFrontMotor, leftRearMotor, rightRearMotor, rightFrontMotor)
 
-        for (motor in motors) {
+        for (motor in driveMotors) {
             val motorConfigurationType = motor.motorType.clone()
             motorConfigurationType.achieveableMaxRPMFraction = 1.0
             motor.motorType = motorConfigurationType
 
             // Set zero power behavior
             motor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+
+            // Run without encoder since we're using dead wheels
+            motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         }
     }
+
     private fun initializeWebcam(hardware: HardwareMap) {
         webcam = hardware.get(WebcamName::class.java, "webcam" )
         cameraDirection = BuiltinCameraDirection.BACK
     }
+
+    private fun initializeSubsystemMotors(hardware: HardwareMap) {
+        viperMotor = safelyGetHardware<DcMotorEx>(hardware, config.viperMotor)
+        intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
+        climbMotor = safelyGetHardware<DcMotorEx>(hardware, config.climbMotor)
+    }
+
     private fun initializeServos(hardware: HardwareMap) {
-        // TODO: For example purposes only, replace these with real hardware
-//        grabberExtendServo = hardware.get(Servo::class.java, "servoExtend")
-//        grabberServo = hardware.get(Servo::class.java, "servoGrab")
+        bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
+        deployIntakeServo = safelyGetHardware<Servo>(hardware, config.deployIntakeServo)
+    }
+
+    private fun initializeSensors(hardware: HardwareMap) {
+        touchSensor = safelyGetHardware<TouchSensor>(hardware, "touchSensor")
+        colorSensor = safelyGetHardware<ColorSensor>(hardware, "colorSensor")
+        distanceSensor = safelyGetHardware<DistanceSensor>(hardware, "distanceSensor")
+    }
+
+    private inline fun <reified T> safelyGetHardware(hardware: HardwareMap, deviceName: String?): T? {
+        if (deviceName.isNullOrBlank()) return null
+
+        return try {
+            hardware.get(T::class.java, deviceName)
+        } catch (e: Exception) {
+            // Ignore exception and return null
+            null
+        }
     }
 
     val rawExternalHeading: Double

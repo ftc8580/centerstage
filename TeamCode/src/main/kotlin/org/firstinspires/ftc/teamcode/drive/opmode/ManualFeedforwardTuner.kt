@@ -97,9 +97,8 @@ class ManualFeedforwardTuner : LinearOpMode() {
 
                     // update telemetry
                     telemetry.addData("targetVelocity", motionState.v)
-                    telemetry.addData("measuredVelocity", currentVelo)
-                    // TODO BB: Figure this out
-                    // telemetry.addData("error", motionState.v - currentVelo)
+                    telemetry.addData("measuredVelocity", currentVelo?.x ?: 0.0)
+                    telemetry.addData("error", motionState.v - (currentVelo?.x ?: 0.0))
                 }
 
                 Mode.DRIVER_MODE -> {
@@ -123,7 +122,7 @@ class ManualFeedforwardTuner : LinearOpMode() {
     }
 
     companion object {
-        private var DISTANCE = 72.0 // in
+        @JvmField var DISTANCE = 72.0 // in
         private fun generateProfile(movingForward: Boolean): MotionProfile {
             val start = MotionState(if (movingForward) 0.0 else DISTANCE, 0.0, 0.0, 0.0)
             val goal = MotionState(if (movingForward) DISTANCE else 0.0, 0.0, 0.0, 0.0)

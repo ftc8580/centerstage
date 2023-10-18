@@ -40,7 +40,7 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     private val lastEncVels: MutableList<Int> = ArrayList()
 
     override var localizer = StandardTrackingWheelLocalizer(
-        hardwareMap = hardware.hardwareMap,
+        hardware = hardware,
         lastEncPositions = lastEncPositions,
         lastEncVels = lastEncVels
     ) as Localizer
@@ -51,11 +51,9 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
             Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5
         )
 
-        val lastTrackingEncPositions: List<Int> = ArrayList()
-        val lastTrackingEncVels: List<Int> = ArrayList()
+        val lastTrackingEncPositions = mutableListOf<Int>()
+        val lastTrackingEncVels = mutableListOf<Int>()
 
-        // TODO: if desired, use setLocalizer() to change the localization method
-        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
         trajectorySequenceRunner = TrajectorySequenceRunner(
             follower, HEADING_PID, hardware.batteryVoltageSensor,
             lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
@@ -158,7 +156,7 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     override fun getWheelPositions(): List<Double> {
         lastEncPositions.clear()
         val wheelPositions: MutableList<Double> = ArrayList()
-        for (motor in hardware.motors) {
+        for (motor in hardware.driveMotors) {
             val position = motor.currentPosition
             lastEncPositions.add(position)
             wheelPositions.add(DriveConstants.encoderTicksToInches(position.toDouble()))
@@ -169,7 +167,7 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     override fun getWheelVelocities(): List<Double> {
         lastEncVels.clear()
         val wheelVelocities: MutableList<Double> = ArrayList()
-        for (motor in hardware.motors) {
+        for (motor in hardware.driveMotors) {
             val vel = motor.velocity.toInt()
             lastEncVels.add(vel)
             wheelVelocities.add(DriveConstants.encoderTicksToInches(vel.toDouble()))
@@ -188,12 +186,12 @@ class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
         hardware.externalHeadingVelocity
 
     companion object {
-        var TRANSLATIONAL_PID = PIDCoefficients(0.0, 0.0, 0.0)
-        var HEADING_PID = PIDCoefficients(0.0, 0.0, 0.0)
-        var LATERAL_MULTIPLIER = 1.0
-        var VX_WEIGHT = 1.0
-        var VY_WEIGHT = 1.0
-        var OMEGA_WEIGHT = 1.0
+        @JvmField var TRANSLATIONAL_PID = PIDCoefficients(16.0, 0.0, 0.0)
+        @JvmField var HEADING_PID = PIDCoefficients(25.0, 0.0, 0.0)
+        @JvmField var LATERAL_MULTIPLIER = 1.23
+        @JvmField var VX_WEIGHT = 1.0
+        @JvmField var VY_WEIGHT = 1.0
+        @JvmField var OMEGA_WEIGHT = 1.0
         private val VEL_CONSTRAINT = getVelocityConstraint(
             DriveConstants.MAX_VEL,
             DriveConstants.MAX_ANG_VEL,
