@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.config.CDConfig
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.drive.CDMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /*
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 class SplineTest : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        val drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
+        val drive = CDMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         waitForStart()
         if (isStopRequested) return
         val traj = drive.trajectoryBuilder(Pose2d())

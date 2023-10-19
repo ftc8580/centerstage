@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.command
+package org.firstinspires.ftc.teamcode.command.delivery
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem

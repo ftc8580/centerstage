@@ -5,14 +5,14 @@ import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.Subsystem
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import org.firstinspires.ftc.teamcode.config.CDConfig
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.drive.CDMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 import java.lang.Exception
 
 abstract class OpModeBase : CommandOpMode() {
     lateinit var hardware: HardwareManager
-    lateinit var mecanumDrive: SampleMecanumDrive
+    lateinit var mecanumDrive: CDMecanumDrive
     lateinit var driverGamepad: GamepadEx
     lateinit var accessoryGamepad: GamepadEx
     lateinit var multitelemetry: MultipleTelemetry
@@ -21,7 +21,7 @@ abstract class OpModeBase : CommandOpMode() {
 
     fun initHardware(isAuto: Boolean) {
         hardware = HardwareManager(CDConfig(), hardwareMap)
-        mecanumDrive = SampleMecanumDrive(hardware)
+        mecanumDrive = CDMecanumDrive(hardware)
         multitelemetry = MultipleTelemetry(telemetry)
         // Subsystems
         deliverySubsystem = try {

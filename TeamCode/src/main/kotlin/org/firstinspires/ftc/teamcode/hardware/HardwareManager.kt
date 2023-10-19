@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware
 
-
-
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor

@@ -26,7 +26,7 @@ import kotlin.math.abs
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-class SampleMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
+class CDMecanumDrive(private val hardware: HardwareManager) : MecanumDrive(
     DriveConstants.kV,
     DriveConstants.kA,
     DriveConstants.kStatic,

@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.RobotLog
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.config.DriveConstants
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.drive.CDMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /*
@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 @Autonomous(group = "drive")
 class ManualFeedforwardTuner : LinearOpMode() {
     private val dashboard = FtcDashboard.getInstance()
-    private var drive: SampleMecanumDrive? = null
+    private var drive: CDMecanumDrive? = null
 
     internal enum class Mode {
         DRIVER_MODE, TUNING_MODE
@@ -53,7 +53,7 @@ class ManualFeedforwardTuner : LinearOpMode() {
             )
         }
         val telemetry: Telemetry = MultipleTelemetry(telemetry, dashboard.telemetry)
-        drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
+        drive = CDMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         val voltageSensor = hardwareMap.voltageSensor.iterator().next()
         mode = Mode.TUNING_MODE
         val clock = NanoClock.system()

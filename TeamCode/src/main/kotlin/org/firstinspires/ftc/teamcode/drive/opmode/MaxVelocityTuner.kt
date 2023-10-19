@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.config.DriveConstants
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.drive.CDMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 /**
@@ -33,7 +33,7 @@ class MaxVelocityTuner : LinearOpMode() {
 
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        val drive = SampleMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
+        val drive = CDMecanumDrive(HardwareManager(CDConfig(), hardwareMap))
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next()
         val telemetry: Telemetry =
             MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
