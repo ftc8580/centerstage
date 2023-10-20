@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
+import org.firstinspires.ftc.teamcode.util.ServoUtil
 
 class DeliverySubsystem(hardware: HardwareManager) : SubsystemBase() {
     private var viperMotor: DcMotorEx
@@ -30,6 +31,10 @@ class DeliverySubsystem(hardware: HardwareManager) : SubsystemBase() {
     }
 
     fun isStopped(): Boolean = !viperMotor.isBusy
+
+    fun getOpenBucketMs(): Double {
+        return ServoUtil.getSweepTimeMs(0.0, 1.0, SERVO_SCALE_RANGE_MIN, SERVO_SCALE_RANGE_MAX)
+    }
 
     companion object {
         // TODO: Check these values

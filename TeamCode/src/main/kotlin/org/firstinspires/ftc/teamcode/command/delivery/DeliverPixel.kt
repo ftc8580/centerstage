@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.command.delivery
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
+import org.firstinspires.ftc.teamcode.util.CDRuntime
 
 class DeliverPixel(private val deliverySubsystem: DeliverySubsystem) : CommandBase() {
     init {
@@ -9,8 +10,11 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem) : CommandBa
     }
 
     private var currentState = DeliverPixelState.IDLE
+    private var targetTimeMs = 0.0
+    private val runtime = CDRuntime()
 
     override fun initialize() {
+        targetTimeMs = deliverySubsystem.getOpenBucketMs()
         currentState = DeliverPixelState.STARTED
     }
 
@@ -18,6 +22,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem) : CommandBa
         // This is a state machine
         when (currentState) {
             DeliverPixelState.STARTED -> {
+                runtime.reset()
                 deliverySubsystem.setHeight(DELIVERY_HEIGHT)
                 currentState = DeliverPixelState.RAISING
             }
@@ -28,8 +33,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem) : CommandBa
                 }
             }
             DeliverPixelState.DROPPING_PIXEL -> {
-                // TODO: Detect that servo has been completely opened
-                if (true) {
+                if (runtime.isTimedOut(targetTimeMs)) {
                     deliverySubsystem.closeBucket()
                     deliverySubsystem.setHeight(INTAKE_HEIGHT)
                     currentState = DeliverPixelState.LOWERING
