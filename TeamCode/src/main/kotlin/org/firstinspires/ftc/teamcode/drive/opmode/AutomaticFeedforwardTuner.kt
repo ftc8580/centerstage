@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.util.NanoClock
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.RobotLog
 import org.firstinspires.ftc.robotcore.external.Telemetry
@@ -29,6 +30,7 @@ import kotlin.math.sqrt
  */
 @Config
 @Autonomous(group = "drive")
+@Disabled
 class AutomaticFeedforwardTuner : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {

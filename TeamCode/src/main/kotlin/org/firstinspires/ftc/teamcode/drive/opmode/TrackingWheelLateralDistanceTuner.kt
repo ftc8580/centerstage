@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.util.Angle.normDelta
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.RobotLog
@@ -64,6 +65,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
  */
 @Config
 @TeleOp(group = "drive")
+@Disabled
 class TrackingWheelLateralDistanceTuner : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {

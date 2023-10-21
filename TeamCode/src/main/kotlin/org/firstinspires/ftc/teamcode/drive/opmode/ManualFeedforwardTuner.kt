@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator.generateSimple
 import com.acmerobotics.roadrunner.profile.MotionState
 import com.acmerobotics.roadrunner.util.NanoClock
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.RobotLog
 import org.firstinspires.ftc.robotcore.external.Telemetry
@@ -35,6 +36,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
  */
 @Config
 @Autonomous(group = "drive")
+@Disabled
 class ManualFeedforwardTuner : LinearOpMode() {
     private val dashboard = FtcDashboard.getInstance()
     private var drive: CDMecanumDrive? = null

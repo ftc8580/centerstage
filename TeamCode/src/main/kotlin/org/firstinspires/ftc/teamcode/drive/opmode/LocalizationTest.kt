@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.opmode
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.config.CDConfig
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @TeleOp(group = "drive")
+@Disabled
 class LocalizationTest : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
