@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.command.intake.model.IntakeState
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
 
-class IntakePixel(private val intakeSubsystem: IntakeSubsystem) : CommandBase() {
+class EjectPixel(private val intakeSubsystem: IntakeSubsystem) : CommandBase() {
     init {
         addRequirements(intakeSubsystem)
     }
@@ -18,10 +18,10 @@ class IntakePixel(private val intakeSubsystem: IntakeSubsystem) : CommandBase() 
     override fun execute() {
         when (currentState) {
             IntakeState.STARTED -> {
-                intakeSubsystem.runIntake()
-                currentState = IntakeState.INTAKING
+                intakeSubsystem.runEject()
+                currentState = IntakeState.EJECTING
             }
-            IntakeState.INTAKING -> {
+            IntakeState.EJECTING -> {
                 // TODO: Watch for signal of pixel being picked up and then stop
                 if (true) {
                     intakeSubsystem.stop()

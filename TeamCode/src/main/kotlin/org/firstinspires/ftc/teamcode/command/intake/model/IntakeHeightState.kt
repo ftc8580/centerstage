@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.command.intake
+package org.firstinspires.ftc.teamcode.command.intake.model
 
 enum class IntakeHeightState {
     IDLE,

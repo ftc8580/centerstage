@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.command.intake
 
 import com.arcrobotics.ftclib.command.CommandBase
+import org.firstinspires.ftc.teamcode.command.intake.model.IntakeHeightState
 import org.firstinspires.ftc.teamcode.subsystem.IntakeHeightSubsystem
 import org.firstinspires.ftc.teamcode.util.CDRuntime
 

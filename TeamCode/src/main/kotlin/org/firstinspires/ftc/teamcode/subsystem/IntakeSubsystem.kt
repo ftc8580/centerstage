@@ -11,17 +11,20 @@ class IntakeSubsystem(hardware: HardwareManager) : SubsystemBase() {
         intakeMotor = hardware.intakeMotor!!
     }
 
-    fun runForward() {
-        intakeMotor.power = 1.0
-        intakeMotor.setMotorEnable()
+    fun runIntake() {
+        run(1.0)
     }
 
-    fun runReverse() {
-        intakeMotor.power = -1.0
-        intakeMotor.setMotorEnable()
+    fun runEject() {
+        run(-1.0)
     }
 
     fun stop() {
         intakeMotor.setMotorDisable()
+    }
+
+    private fun run(motorPower: Double) {
+        intakeMotor.power = motorPower
+        intakeMotor.setMotorEnable()
     }
 }
