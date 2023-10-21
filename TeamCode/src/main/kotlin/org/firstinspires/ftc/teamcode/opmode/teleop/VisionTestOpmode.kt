@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop
 
 // Op Mode Stuff
+import android.annotation.SuppressLint
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.subsystem.Vision
@@ -18,16 +19,17 @@ import org.firstinspires.ftc.teamcode.subsystem.Vision
 class VisionTestOpmode : OpModeBase() {
     private lateinit var vision: Vision
     // Update the tfliteModelFileName with the path to the tflite file for your prop.
+    @SuppressLint("SdCardPath")
     private var tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite"
-    // Update the fliteLabels with your trained labels EXACTLY how you defined it when you trained your model.
-    private var tfliteLabels = listOf<String>(
+    // Update the tfliteLabels with your trained labels EXACTLY how you defined it when you trained your model.
+    private var tfliteLabels = listOf(
         "1 Pacman",
         "2 Cherry",
         "3 Ghost"
     )
     override fun initialize() {
         initHardware(false)
-        vision = Vision(hardware, multitelemetry, tfliteModelFileName,tfliteLabels)
+        vision = Vision(hardware, multiTelemetry, tfliteModelFileName,tfliteLabels)
         vision.initDoubleVision()
     }
 
