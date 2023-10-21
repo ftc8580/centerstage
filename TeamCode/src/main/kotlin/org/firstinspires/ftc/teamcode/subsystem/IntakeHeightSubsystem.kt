@@ -6,19 +6,18 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.util.ServoUtil
 
 class IntakeHeightSubsystem(hardware: HardwareManager) : SubsystemBase() {
-    private var servo: Servo? = null
+    private val servo: Servo
 
     init {
-        servo = hardware.deployIntakeServo
+        servo = hardware.deployIntakeServo!!
     }
 
     fun moveTo(position: Double) {
-        TODO()
+        servo.position = position
     }
 
     fun getMoveTimeMs(targetPosition: Double): Double {
-        if (servo?.position == null) return 0.0
-
-        return ServoUtil.getSweepTimeMs(servo!!.position, targetPosition)
+        // TODO: account for bounded range
+        return ServoUtil.getSweepTimeMs(servo.position, targetPosition)
     }
 }

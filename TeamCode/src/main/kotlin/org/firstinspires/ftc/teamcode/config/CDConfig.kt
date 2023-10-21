@@ -10,6 +10,7 @@ data class CDConfig(
     val climbMotor: String? = "climbMotor",
     val bucketServo: String? = "bucketServo",
     val deployIntakeServo: String? = "deployIntakeServo",
+    val droneServo: String? = "droneServo",
     val direction: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD,
     val debugMode: Boolean = false
 )

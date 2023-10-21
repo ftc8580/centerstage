@@ -59,7 +59,9 @@ abstract class OpModeBase : CommandOpMode() {
         val subsystems = listOf<Subsystem?>(
             deliverySubsystem,
             droneSubsystem,
-            intakeHeightSubsystem
+            intakeHeightSubsystem,
+            intakeSubsystem,
+            suspendSubsystem
         )
 
         register(*subsystems.filterNotNull().toTypedArray())

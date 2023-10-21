@@ -35,6 +35,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     // Servos
     var bucketServo: Servo? = null
     var deployIntakeServo: Servo? = null
+    var droneServo: Servo? = null
 
     // Dead wheels
     var leftEncoder: Encoder? = null
@@ -131,6 +132,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     private fun initializeServos(hardware: HardwareMap) {
         bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
         deployIntakeServo = safelyGetHardware<Servo>(hardware, config.deployIntakeServo)
+        droneServo = safelyGetHardware<Servo>(hardware, config.droneServo)
     }
 
     private fun initializeSensors(hardware: HardwareMap) {
