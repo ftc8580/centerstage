@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.util.Encoder
  *    \--------------/
  *
  */
-@Config
 class StandardTrackingWheelLocalizer(
     hardware: HardwareManager,
     private val lastEncPositions: MutableList<Int>,

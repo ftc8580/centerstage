@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystem.DroneSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.IntakeHeightSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.SuspendSubsystem
-import org.firstinspires.ftc.teamcode.subsystem.Vision
+import org.firstinspires.ftc.teamcode.vision.DoubleVision
 import java.lang.Exception
 
 abstract class OpModeBase : CommandOpMode() {
@@ -23,12 +23,12 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var accessoryGamepad: GamepadEx
     lateinit var multiTelemetry: MultipleTelemetry
 
-    private var deliverySubsystem: DeliverySubsystem? = null
-    private var droneSubsystem: DroneSubsystem? = null
-    private var intakeHeightSubsystem: IntakeHeightSubsystem? = null
-    private var intakeSubsystem: IntakeSubsystem? = null
-    private var suspendSubsystem: SuspendSubsystem? = null
-    private var visionSubsystem: Vision? = null
+    var deliverySubsystem: DeliverySubsystem? = null
+    var droneSubsystem: DroneSubsystem? = null
+    var intakeHeightSubsystem: IntakeHeightSubsystem? = null
+    var intakeSubsystem: IntakeSubsystem? = null
+    var suspendSubsystem: SuspendSubsystem? = null
+    var doubleVisionSubsystem: DoubleVision? = null
 
     @SuppressLint("SdCardPath")
     private val tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite"
@@ -43,8 +43,8 @@ abstract class OpModeBase : CommandOpMode() {
         intakeHeightSubsystem = try { IntakeHeightSubsystem(hardware) } catch (e: Exception) { null }
         intakeSubsystem = try { IntakeSubsystem(hardware) } catch (e: Exception) { null }
         suspendSubsystem = try { SuspendSubsystem(hardware) } catch (e: Exception) { null }
-        visionSubsystem = try {
-            Vision(
+        doubleVisionSubsystem = try {
+            DoubleVision(
                 hardware,
                 multiTelemetry,
                 tfliteModelFileName,

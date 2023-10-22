@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.subsystem
+package org.firstinspires.ftc.teamcode.vision
 
 // Hardware
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
-// Vision
+// DoubleVision
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import org.firstinspires.ftc.vision.VisionPortal
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor
  */
 
 
-class Vision (private val hardware:HardwareManager, private val telemetry: MultipleTelemetry, private val tfliteModelFileName:String, private val tfliteLabels:List<String>){
+class DoubleVision (private val hardware:HardwareManager, private val telemetry: MultipleTelemetry, private val tfliteModelFileName:String, private val tfliteLabels:List<String>){
     /**
      * The variable to store our instance of the AprilTag processor.
      */
@@ -57,7 +57,7 @@ class Vision (private val hardware:HardwareManager, private val telemetry: Multi
             .setCamera(hardware.webcam)
             .addProcessors(tfod, aprilTag)
             .build()
-    } // end initDoubleVision()
+    }
 
     /**
      * Add telemetry about AprilTag detections.
@@ -77,8 +77,8 @@ class Vision (private val hardware:HardwareManager, private val telemetry: Multi
                 telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id))
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y))
             }
-        } // end for() loop
-    } // end method telemetryAprilTag()
+        }
+    }
 
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
@@ -96,11 +96,6 @@ class Vision (private val hardware:HardwareManager, private val telemetry: Multi
             telemetry.addData("- Position", "%.0f / %.0f", x, y)
             telemetry.addData("- Size", "%.0f x %.0f", recognition.width, recognition.height)
 
-        } // end for() loop
-    } // end method telemetryTfod()
-
-
-    companion object {
-        private const val USE_WEBCAM = true // true for webcam, false for phone camera
+        }
     }
-} // end class
+}

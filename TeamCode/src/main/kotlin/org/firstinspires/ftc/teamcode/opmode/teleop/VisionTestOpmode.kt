@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop
 import android.annotation.SuppressLint
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
-import org.firstinspires.ftc.teamcode.subsystem.Vision
+import org.firstinspires.ftc.teamcode.vision.DoubleVision
 
 /*
  * This OpMode illustrates the basics of using both AprilTag recognition and TensorFlow
@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.subsystem.Vision
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 
-@TeleOp(name = "Vision Subsystem Test", group = "Subsystems")
+@TeleOp(name = "DoubleVision Subsystem Test", group = "Subsystems")
 //@Disabled
 class VisionTestOpmode : OpModeBase() {
-    private lateinit var vision: Vision
+    private lateinit var doubleVision: DoubleVision
     // Update the tfliteModelFileName with the path to the tflite file for your prop.
     @SuppressLint("SdCardPath")
     private var tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite"
@@ -29,8 +29,8 @@ class VisionTestOpmode : OpModeBase() {
     )
     override fun initialize() {
         initHardware(false)
-        vision = Vision(hardware, multiTelemetry, tfliteModelFileName,tfliteLabels)
-        vision.initDoubleVision()
+        doubleVision = DoubleVision(hardware, multiTelemetry, tfliteModelFileName,tfliteLabels)
+        doubleVision.initDoubleVision()
     }
 
     override fun runOpMode() {
@@ -42,34 +42,34 @@ class VisionTestOpmode : OpModeBase() {
                 telemetry.addLine()
                 telemetry.addLine("----------------------------------------")
             }
-            if (vision.myVisionPortal!!.getProcessorEnabled(vision.aprilTag)) {
+            if (doubleVision.myVisionPortal!!.getProcessorEnabled(doubleVision.aprilTag)) {
                 // User instructions: Dpad left or Dpad right.
                 telemetry.addLine("Dpad Left to disable AprilTag")
                 telemetry.addLine()
-                vision.telemetryAprilTag()
+                doubleVision.telemetryAprilTag()
             } else {
                 telemetry.addLine("Dpad Right to enable AprilTag")
             }
             telemetry.addLine()
             telemetry.addLine("----------------------------------------")
-            if (vision.myVisionPortal!!.getProcessorEnabled(vision.tfod)) {
+            if (doubleVision.myVisionPortal!!.getProcessorEnabled(doubleVision.tfod)) {
                 telemetry.addLine("Dpad Down to disable TFOD")
                 telemetry.addLine()
-                vision.telemetryTfod()
+                doubleVision.telemetryTfod()
             } else {
                 telemetry.addLine("Dpad Up to enable TFOD")
             }
             // Push telemetry to the Driver Station.
             telemetry.update()
             if (gamepad1.dpad_left) {
-                vision.myVisionPortal!!.setProcessorEnabled(vision.aprilTag, false)
+                doubleVision.myVisionPortal!!.setProcessorEnabled(doubleVision.aprilTag, false)
             } else if (gamepad1.dpad_right) {
-                vision.myVisionPortal!!.setProcessorEnabled(vision.aprilTag, true)
+                doubleVision.myVisionPortal!!.setProcessorEnabled(doubleVision.aprilTag, true)
             }
             if (gamepad1.dpad_down) {
-                vision.myVisionPortal!!.setProcessorEnabled(vision.tfod, false)
+                doubleVision.myVisionPortal!!.setProcessorEnabled(doubleVision.tfod, false)
             } else if (gamepad1.dpad_up) {
-                vision.myVisionPortal!!.setProcessorEnabled(vision.tfod, true)
+                doubleVision.myVisionPortal!!.setProcessorEnabled(doubleVision.tfod, true)
             }
             sleep(20)
         } // end while loop

@@ -47,7 +47,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     var colorSensor: ColorSensor? = null
     var distanceSensor: DistanceSensor? = null
 
-    // Vision
+    // DoubleVision
     lateinit var webcam: WebcamName
     lateinit var cameraDirection: BuiltinCameraDirection
 
