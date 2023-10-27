@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.command.intake
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.command.intake.model.IntakeHeightState
-import org.firstinspires.ftc.teamcode.subsystem.IntakeHeightSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.util.CDRuntime
 
-class LowerOuterIntake(private val intakeHeightSubsystem: IntakeHeightSubsystem) : CommandBase() {
+class LowerOuterIntake(private val intakeSubsystem: IntakeSubsystem) : CommandBase() {
     init {
-        addRequirements(intakeHeightSubsystem)
+        addRequirements(intakeSubsystem)
     }
 
     private var currentState = IntakeHeightState.IDLE
@@ -15,7 +15,7 @@ class LowerOuterIntake(private val intakeHeightSubsystem: IntakeHeightSubsystem)
     private val runtime = CDRuntime()
 
     override fun initialize() {
-        targetTimeMs = intakeHeightSubsystem.getMoveTimeMs(SERVO_LOW_POSITION)
+        targetTimeMs = intakeSubsystem.getMoveTimeMs(SERVO_LOW_POSITION)
         currentState = IntakeHeightState.STARTED
     }
 
@@ -23,7 +23,7 @@ class LowerOuterIntake(private val intakeHeightSubsystem: IntakeHeightSubsystem)
         when (currentState) {
             IntakeHeightState.STARTED -> {
                 runtime.reset()
-                intakeHeightSubsystem.moveTo(SERVO_LOW_POSITION)
+                intakeSubsystem.moveTo(SERVO_LOW_POSITION)
                 currentState = IntakeHeightState.LOWERING
             }
             IntakeHeightState.LOWERING -> {
@@ -46,7 +46,7 @@ class LowerOuterIntake(private val intakeHeightSubsystem: IntakeHeightSubsystem)
 
     override fun end(interrupted: Boolean) {
         if (interrupted) {
-            intakeHeightSubsystem.moveTo(SERVO_HIGH_POSITION)
+            intakeSubsystem.moveTo(SERVO_HIGH_POSITION)
         }
 
         currentState = IntakeHeightState.IDLE

@@ -1,30 +1,23 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
+import org.firstinspires.ftc.teamcode.util.ServoUtil
 
 class IntakeSubsystem(hardware: HardwareManager) : SubsystemBase() {
-    private var intakeMotor: DcMotorEx
+    private val servo: Servo
 
     init {
-        intakeMotor = hardware.intakeMotor!!
+        servo = hardware.deployIntakeServo!!
     }
 
-    fun runIntake() {
-        run(1.0)
+    fun moveTo(position: Double) {
+        servo.position = position
     }
 
-    fun runEject() {
-        run(-1.0)
-    }
-
-    fun stop() {
-        intakeMotor.setMotorDisable()
-    }
-
-    private fun run(motorPower: Double) {
-        intakeMotor.power = motorPower
-        intakeMotor.setMotorEnable()
+    fun getMoveTimeMs(targetPosition: Double): Double {
+        // TODO: account for bounded range
+        return ServoUtil.getSweepTimeMs(servo.position, targetPosition)
     }
 }

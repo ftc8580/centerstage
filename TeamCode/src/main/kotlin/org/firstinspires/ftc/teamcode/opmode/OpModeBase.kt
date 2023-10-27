@@ -10,10 +10,8 @@ import org.firstinspires.ftc.teamcode.drive.CDMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 import org.firstinspires.ftc.teamcode.subsystem.DroneSubsystem
-import org.firstinspires.ftc.teamcode.subsystem.IntakeHeightSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystem.SuspendSubsystem
-import org.firstinspires.ftc.teamcode.vision.DoubleVision
+import org.firstinspires.ftc.teamcode.subsystem.TransferSubsystem
 import java.lang.Exception
 
 abstract class OpModeBase : CommandOpMode() {
@@ -25,10 +23,10 @@ abstract class OpModeBase : CommandOpMode() {
 
     var deliverySubsystem: DeliverySubsystem? = null
     var droneSubsystem: DroneSubsystem? = null
-    var intakeHeightSubsystem: IntakeHeightSubsystem? = null
     var intakeSubsystem: IntakeSubsystem? = null
-    var suspendSubsystem: SuspendSubsystem? = null
-    var doubleVisionSubsystem: DoubleVision? = null
+    var transferSubsystem: TransferSubsystem? = null
+//    var suspendSubsystem: SuspendSubsystem? = null
+//    var doubleVisionSubsystem: DoubleVision? = null
 
     @SuppressLint("SdCardPath")
     private val tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite"
@@ -37,31 +35,32 @@ abstract class OpModeBase : CommandOpMode() {
         hardware = HardwareManager(CDConfig(), hardwareMap)
         mecanumDrive = CDMecanumDrive(hardware)
         multiTelemetry = MultipleTelemetry(telemetry)
+
         // Subsystems
         deliverySubsystem = try { DeliverySubsystem(hardware) } catch (e: Exception) { null }
         droneSubsystem = try { DroneSubsystem(hardware) } catch (e: Exception) { null }
-        intakeHeightSubsystem = try { IntakeHeightSubsystem(hardware) } catch (e: Exception) { null }
         intakeSubsystem = try { IntakeSubsystem(hardware) } catch (e: Exception) { null }
-        suspendSubsystem = try { SuspendSubsystem(hardware) } catch (e: Exception) { null }
-        doubleVisionSubsystem = try {
-            DoubleVision(
-                hardware,
-                multiTelemetry,
-                tfliteModelFileName,
-                listOf(
-                    "1 Pacman",
-                    "2 Cherry",
-                    "3 Ghost"
-                )
-            )
-        } catch (e: Exception) { null }
+        transferSubsystem = try { TransferSubsystem(hardware) } catch (e: Exception) { null }
+//        suspendSubsystem = try { SuspendSubsystem(hardware) } catch (e: Exception) { null }
+//        doubleVisionSubsystem = try {
+//            DoubleVision(
+//                hardware,
+//                multiTelemetry,
+//                tfliteModelFileName,
+//                listOf(
+//                    "1 Pacman",
+//                    "2 Cherry",
+//                    "3 Ghost"
+//                )
+//            )
+//        } catch (e: Exception) { null }
 
         val subsystems = listOf<Subsystem?>(
             deliverySubsystem,
             droneSubsystem,
-            intakeHeightSubsystem,
             intakeSubsystem,
-            suspendSubsystem
+//            transferSubsystem,
+//            suspendSubsystem
         )
 
         register(*subsystems.filterNotNull().toTypedArray())

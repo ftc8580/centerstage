@@ -122,7 +122,7 @@ abstract class BackstageSideAuton(
 
         schedule(SequentialCommandGroup(
             FollowTrajectorySequence(mecanumDrive, spikeTrajectory),
-            EjectPixel(intakeSubsystem!!),
+            EjectPixel(transferSubsystem!!),
             FollowTrajectorySequence(mecanumDrive, deliverTrajectory),
             DeliverPixel(deliverySubsystem!!),
             // TODO: Uncomment when park trajectory is defined

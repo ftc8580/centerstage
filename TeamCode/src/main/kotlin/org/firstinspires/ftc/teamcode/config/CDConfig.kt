@@ -7,6 +7,7 @@ data class CDConfig(
     val driveMotors: DriveMotors = DriveMotors(),
     val viperMotor: String? = "viperMotor",
     val intakeMotor: String? = "intakeMotor",
+    val transferMotor: String? = "transferMotor",
     val climbMotor: String? = "climbMotor",
     val bucketServo: String? = "bucketServo",
     val deployIntakeServo: String? = "deployIntakeServo",

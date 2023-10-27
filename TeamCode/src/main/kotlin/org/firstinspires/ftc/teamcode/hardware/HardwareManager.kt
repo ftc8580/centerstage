@@ -29,12 +29,12 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
 
     // Subsystem motors
     var viperMotor: DcMotorEx? = null
+    var transferMotor: DcMotorEx? = null
     var intakeMotor: DcMotorEx? = null
     var climbMotor: DcMotorEx? = null
 
     // Servos
     var bucketServo: Servo? = null
-    var deployIntakeServo: Servo? = null
     var droneServo: Servo? = null
 
     // Dead wheels
@@ -125,13 +125,13 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
 
     private fun initializeSubsystemMotors(hardware: HardwareMap) {
         viperMotor = safelyGetHardware<DcMotorEx>(hardware, config.viperMotor)
+        transferMotor = safelyGetHardware<DcMotorEx>(hardware, config.transferMotor)
         intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
         climbMotor = safelyGetHardware<DcMotorEx>(hardware, config.climbMotor)
     }
 
     private fun initializeServos(hardware: HardwareMap) {
         bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
-        deployIntakeServo = safelyGetHardware<Servo>(hardware, config.deployIntakeServo)
         droneServo = safelyGetHardware<Servo>(hardware, config.droneServo)
     }
 
