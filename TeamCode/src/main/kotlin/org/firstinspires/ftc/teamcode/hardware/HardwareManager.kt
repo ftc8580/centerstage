@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware
 
 import com.qualcomm.hardware.lynx.LynxModule
+import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
@@ -44,9 +45,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     var frontEncoder: Encoder? = null
 
     // Sensors
-    var touchSensor: TouchSensor? = null
-    var colorSensor: ColorSensor? = null
-    var distanceSensor: DistanceSensor? = null
+    var viperPot: AnalogInput? = null
 
     // DoubleVision
     var webcam: WebcamName? = null
@@ -126,9 +125,16 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
 
     private fun initializeSubsystemMotors(hardware: HardwareMap) {
         viperMotor = safelyGetHardware<DcMotorEx>(hardware, config.viperMotor)
+        viperMotor?.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+        viperMotor?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+
         transferMotor = safelyGetHardware<DcMotorEx>(hardware, config.transferMotor)
+        transferMotor?.zeroPowerBehavior = ZeroPowerBehavior.FLOAT
+
         intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
         climbMotor = safelyGetHardware<DcMotorEx>(hardware, config.climbMotor)
+
+
     }
 
     private fun initializeServos(hardware: HardwareMap) {
@@ -138,9 +144,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     }
 
     private fun initializeSensors(hardware: HardwareMap) {
-        touchSensor = safelyGetHardware<TouchSensor>(hardware, "touchSensor")
-        colorSensor = safelyGetHardware<ColorSensor>(hardware, "colorSensor")
-        distanceSensor = safelyGetHardware<DistanceSensor>(hardware, "distanceSensor")
+        viperPot = safelyGetHardware<AnalogInput>(hardware, config.viperPot)
     }
 
     private inline fun <reified T> safelyGetHardware(hardware: HardwareMap, deviceName: String?): T? {

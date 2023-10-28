@@ -10,18 +10,16 @@ import org.firstinspires.ftc.teamcode.command.bucket.OpenBucket
 import org.firstinspires.ftc.teamcode.command.drone.LaunchDrone
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
-
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
-//    private var touchCount = 0
-//    private var lastDistance = 0.0
-
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
 
     override fun initialize() {
         initHardware(false)
         initializeDriverGamepad(driverGamepad)
         initializeCoDriverGamepad(accessoryGamepad)
+
+        telemetry.speak("Bowser bot tele op activated")
     }
 
     override fun run() {
@@ -30,7 +28,7 @@ class CDTeleop : OpModeBase() {
         mecanumDrive.setDrivePower(
             Pose2d(
                 driverGamepad.leftY * driveSpeedScale,
-                driverGamepad.leftX * driveSpeedScale,
+                -driverGamepad.leftX * driveSpeedScale,
                 driverGamepad.rightX * driveSpeedScale
             )
         )
@@ -60,44 +58,7 @@ class CDTeleop : OpModeBase() {
             hardware.viperMotor?.power = accessoryGamepad.leftY
         }
 
-        telemetry.clearAll()
-
-        deliverySubsystem?.let {
-            telemetry.addLine("delivery sys: true")
-        } ?: telemetry.addLine("delivery sys: false")
-
-        hardware.bucketServo?.let {
-            telemetry.addLine("bucket pos: ${it.position}")
-        }
-
-        telemetry.addLine("speed mult: $driveSpeedScale")
-
-        telemetry.update()
-
-        // Test sensors
-//        telemetry.clearAll()
-//
-//        if (hardware.touchSensor?.isPressed == true) {
-//            touchCount += 1
-//        }
-//
-//        val currentDistance = hardware.distanceSensor?.getDistance(DistanceUnit.INCH)
-//
-//        if (currentDistance != null && currentDistance != lastDistance) {
-//            lastDistance = currentDistance
-//        }
-//
-//        telemetry.addLine("Pressed touch sensor $touchCount")
-//        telemetry.addLine("Distance changed: $lastDistance in")
-//
-//        if (hardware.colorSensor != null) {
-//            val red = hardware.colorSensor!!.red()
-//            val green = hardware.colorSensor!!.green()
-//            val blue = hardware.colorSensor!!.blue()
-//            telemetry.addLine("Color values: $red, $green, $blue")
-//        }
-//
-//        telemetry.update()
+        writeTelemetry()
     }
 
     private fun initializeDriverGamepad(gamepad: GamepadEx) {
@@ -128,11 +89,49 @@ class CDTeleop : OpModeBase() {
             openBucketButton.whenPressed(OpenBucket(deliverySubsystem!!))
             closeBucketButton.whenPressed(CloseBucket(deliverySubsystem!!))
         }
+
+        armAngleUpButton.whenActive(Runnable {
+            val currentServoPosition = hardware.viperAngleServo?.position ?: 0.0
+            hardware.viperAngleServo?.position = currentServoPosition + VIPER_ANGLE_SERVO_INCREMENT
+        })
+
+        armAngleDownButton.whenActive(Runnable {
+            val currentServoPosition = hardware.viperAngleServo?.position ?: 0.0
+            hardware.viperAngleServo?.position = currentServoPosition - VIPER_ANGLE_SERVO_INCREMENT
+        })
+    }
+
+    private fun writeTelemetry() {
+        telemetry.clearAll()
+
+        telemetry.addLine("speed mult: $driveSpeedScale")
+        telemetry.addLine()
+
+        hardware.viperAngleServo?.let {
+            telemetry.addLine("bucket pos: ${it.position}")
+        } ?: telemetry.addLine("[WARNING] Viper angle servo not found")
+
+        hardware.viperPot?.let {
+            telemetry.addLine("pot voltage: ${it.voltage}")
+        } ?: telemetry.addLine("[WARNING] Viper potentiometer not found")
+
+        hardware.viperMotor?.let {
+            telemetry.addLine("viper motor pos: ${it.currentPosition}")
+        } ?: telemetry.addLine("[WARNING] Viper motor not found")
+
+        hardware.bucketServo?.let {
+            telemetry.addLine("bucket pos: ${it.position}")
+        } ?: telemetry.addLine("[WARNING] Bucket servo not found")
+
+        telemetry.update()
     }
 
     companion object {
         private const val DRIVE_SPEED_FAST = 0.9
         private const val DRIVE_SPEED_NORMAL = 0.75
         private const val DRIVE_SPEED_SLOW = 0.5
+
+        // TODO: Testing only, remove after tuned
+        private const val VIPER_ANGLE_SERVO_INCREMENT = 0.02
     }
 }

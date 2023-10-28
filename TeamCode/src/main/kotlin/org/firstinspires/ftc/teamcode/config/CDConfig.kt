@@ -12,6 +12,7 @@ data class CDConfig(
     val bucketServo: String? = "bucketServo",
     val viperAngleServo: String? = "viperAngle",
     val droneServo: String? = "droneServo",
+    val viperPot: String? = "viperPot",
     val direction: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD,
     val debugMode: Boolean = false
 )
