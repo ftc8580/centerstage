@@ -34,7 +34,7 @@ class FakeCRServo : CRServo {
     override fun getPower(): Double = power
 
     override fun getController(): ServoController {
-        throw IllegalArgumentException("Not implemented");
+        throw IllegalArgumentException("Not implemented")
     }
 
     override fun getPortNumber(): Int = 0

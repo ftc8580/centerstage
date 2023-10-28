@@ -4,12 +4,12 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.command.bucket.CloseBucket
 import org.firstinspires.ftc.teamcode.command.bucket.OpenBucket
 import org.firstinspires.ftc.teamcode.command.drone.LaunchDrone
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
+@Suppress("UNUSED")
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
@@ -18,8 +18,6 @@ class CDTeleop : OpModeBase() {
         initHardware(false)
         initializeDriverGamepad(driverGamepad)
         initializeCoDriverGamepad(accessoryGamepad)
-
-        telemetry.speak("Bowser bot tele op activated")
     }
 
     override fun run() {

@@ -2,15 +2,12 @@ package org.firstinspires.ftc.teamcode.hardware
 
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.AnalogInput
-import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.DistanceSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
-import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.util.Encoder
@@ -134,8 +131,6 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
 
         intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
         climbMotor = safelyGetHardware<DcMotorEx>(hardware, config.climbMotor)
-
-
     }
 
     private fun initializeServos(hardware: HardwareMap) {

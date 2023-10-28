@@ -7,11 +7,11 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.util.ServoUtil
 
 class DeliverySubsystem(hardware: HardwareManager) : SubsystemBase() {
-    // private var viperMotor: DcMotorEx
+    private var viperMotor: DcMotorEx
     private var bucketServo: Servo
 
     init {
-        // viperMotor = hardware.viperMotor!!
+        viperMotor = hardware.viperMotor!!
         bucketServo = hardware.bucketServo!!
 
         bucketServo.scaleRange(SERVO_SCALE_RANGE_MIN, SERVO_SCALE_RANGE_MAX)
@@ -27,7 +27,7 @@ class DeliverySubsystem(hardware: HardwareManager) : SubsystemBase() {
     }
 
     fun setHeight(height: Int) {
-        // viperMotor.targetPosition = height
+        viperMotor.targetPosition = height
     }
 
     fun isStopped(): Boolean = true // !viperMotor.isBusy
