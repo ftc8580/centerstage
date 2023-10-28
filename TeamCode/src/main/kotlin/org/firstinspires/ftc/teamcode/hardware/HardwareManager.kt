@@ -36,6 +36,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     // Servos
     var bucketServo: Servo? = null
     var droneServo: Servo? = null
+    var viperAngleServo: Servo? = null
 
     // Dead wheels
     var leftEncoder: Encoder? = null
@@ -48,7 +49,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     var distanceSensor: DistanceSensor? = null
 
     // DoubleVision
-    lateinit var webcam: WebcamName
+    var webcam: WebcamName? = null
     lateinit var cameraDirection: BuiltinCameraDirection
 
     init {
@@ -119,7 +120,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     }
 
     private fun initializeWebcam(hardware: HardwareMap) {
-        webcam = hardware.get(WebcamName::class.java, "webcam" )
+        webcam = safelyGetHardware<WebcamName>(hardware, "webcam")
         cameraDirection = BuiltinCameraDirection.BACK
     }
 
@@ -133,6 +134,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     private fun initializeServos(hardware: HardwareMap) {
         bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
         droneServo = safelyGetHardware<Servo>(hardware, config.droneServo)
+        viperAngleServo = safelyGetHardware<Servo>(hardware, config.viperAngleServo)
     }
 
     private fun initializeSensors(hardware: HardwareMap) {

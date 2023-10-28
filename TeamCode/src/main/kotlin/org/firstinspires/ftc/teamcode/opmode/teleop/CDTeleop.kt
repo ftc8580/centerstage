@@ -60,6 +60,20 @@ class CDTeleop : OpModeBase() {
             hardware.viperMotor?.power = accessoryGamepad.leftY
         }
 
+        telemetry.clearAll()
+
+        deliverySubsystem?.let {
+            telemetry.addLine("delivery sys: true")
+        } ?: telemetry.addLine("delivery sys: false")
+
+        hardware.bucketServo?.let {
+            telemetry.addLine("bucket pos: ${it.position}")
+        }
+
+        telemetry.addLine("speed mult: $driveSpeedScale")
+
+        telemetry.update()
+
         // Test sensors
 //        telemetry.clearAll()
 //

@@ -9,6 +9,6 @@ class CloseBucket(private val deliverySubsystem: DeliverySubsystem) : CommandBas
     }
 
     override fun initialize() {
-        deliverySubsystem.openBucket()
+        deliverySubsystem.closeBucket()
     }
 }

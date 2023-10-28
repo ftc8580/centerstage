@@ -39,6 +39,7 @@ class DoubleVision (private val hardware:HardwareManager, private val telemetry:
      * Initialize AprilTag and TFOD.
      */
     fun initDoubleVision() {
+        if (hardware.webcam == null) return
         // -----------------------------------------------------------------------------------------
         // AprilTag Configuration
         // -----------------------------------------------------------------------------------------
