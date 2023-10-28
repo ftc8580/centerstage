@@ -130,6 +130,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
 
         transferMotor = safelyGetHardware<DcMotorEx>(hardware, config.transferMotor)
         transferMotor?.zeroPowerBehavior = ZeroPowerBehavior.FLOAT
+        transferMotor?.direction = DcMotorSimple.Direction.REVERSE
 
         intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
         climbMotor = safelyGetHardware<DcMotorEx>(hardware, config.climbMotor)

@@ -39,23 +39,23 @@ class CDTeleop : OpModeBase() {
         val rightTriggerValue = accessoryGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
 
         if (accessoryGamepad.isDown(GamepadKeys.Button.A)) {
-            if (leftTriggerValue > 0.01) {
+            if (leftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.transferMotor?.power = -leftTriggerValue
             }
-            if (rightTriggerValue > 0.01) {
+            if (rightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.intakeMotor?.power = -rightTriggerValue
             }
         } else {
-            if (leftTriggerValue > 0.01) {
+            if (leftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.transferMotor?.power = leftTriggerValue
             }
-            if (rightTriggerValue > 0.01) {
+            if (rightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.intakeMotor?.power = rightTriggerValue
             }
         }
 
-        if (accessoryGamepad.leftY > 0.01 || accessoryGamepad.leftY < -0.01) {
-            hardware.viperMotor?.power = accessoryGamepad.leftY
+        if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
+            hardware.viperMotor?.power = -accessoryGamepad.leftY
         }
 
         writeTelemetry()
@@ -127,6 +127,8 @@ class CDTeleop : OpModeBase() {
     }
 
     companion object {
+        private const val VARIABLE_INPUT_DEAD_ZONE = 0.05
+
         private const val DRIVE_SPEED_FAST = 0.9
         private const val DRIVE_SPEED_NORMAL = 0.75
         private const val DRIVE_SPEED_SLOW = 0.5
