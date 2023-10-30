@@ -5,4 +5,4 @@ import org.firstinspires.ftc.teamcode.config.ParkPosition
 
 @Suppress("UNUSED")
 @Autonomous(group = "Blue")
-class BlueBackdropAutonOutside : BlueBackdropAuton(ParkPosition.OUTSIDE)
+class BlueWingSideAutonInside : WingSideAuton(Alliance.BLUE, ParkPosition.INSIDE)

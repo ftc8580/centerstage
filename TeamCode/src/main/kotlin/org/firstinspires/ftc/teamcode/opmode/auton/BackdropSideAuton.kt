@@ -11,11 +11,10 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.vision.RandomizedSpikeLocation
 import org.firstinspires.ftc.teamcode.vision.TensorFlowObjectDetection
 
-abstract class BlueBackdropAuton(private val parkPosition: ParkPosition) : OpModeBase() {
+abstract class BackdropSideAuton(private val alliance: Alliance, private val parkPosition: ParkPosition) : OpModeBase() {
     override fun initialize() {
         initHardware(true)
 
-        val tfod = TensorFlowObjectDetection(hardware, multiTelemetry)
         var spikeLocation = RandomizedSpikeLocation.UNKNOWN
         var spikePose: Pose2d? = null
         var deliveryPose: Pose2d? = null
@@ -23,20 +22,52 @@ abstract class BlueBackdropAuton(private val parkPosition: ParkPosition) : OpMod
         var deliverTrajectory: TrajectorySequence? = null
 
         // Start Pose
-        val startingPose = Pose2d(12.0, 63.5, Math.toRadians(270.0))
+        val startingPose = Pose2d(
+            12.0,
+            alliance.adjust(63.5),
+            Math.toRadians(alliance.adjust(270.0))
+        )
 
         // Spike Delivery Poses
-        val spikePosition1Pose = Pose2d(18.0, 36.0, Math.toRadians(315.0))
-        val spikePosition2Pose = Pose2d(12.0, 32.5, Math.toRadians(270.0))
-        val spikePosition3Pose = Pose2d(6.0, 36.0, Math.toRadians(225.0))
+        val spikePosition1Pose = Pose2d(
+            18.0,
+            alliance.adjust(36.0),
+            Math.toRadians(CENTER_SPIKE_DEGREES + alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
+        )
+        val spikePosition2Pose = Pose2d(
+            12.0,
+            alliance.adjust(32.5),
+            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES))
+        )
+        val spikePosition3Pose = Pose2d(
+            6.0,
+            alliance.adjust(36.0),
+            Math.toRadians(CENTER_SPIKE_DEGREES - alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
+        )
 
         // Pose to make sure we don't run into the dropped pixel
-        val clearSpikePose = Pose2d(12.0, 48.0, Math.toRadians(270.0))
+        val clearSpikePose = Pose2d(
+            12.0,
+            alliance.adjust(48.0),
+            Math.toRadians(alliance.adjust(270.0))
+        )
 
         // Delivery positions
-        val deliverPosition1Pose = Pose2d(51.5, 36.0 + APRIL_TAG_SPACING_INCHES, Math.toRadians(180.0))
-        val deliverPosition2Pose = Pose2d(51.5, 36.0, Math.toRadians(180.0))
-        val deliverPosition3Pose = Pose2d(51.5, 36.0 - APRIL_TAG_SPACING_INCHES, Math.toRadians(180.0))
+        val deliverPosition1Pose = Pose2d(
+            51.5,
+            36.0 + alliance.adjust(APRIL_TAG_SPACING_INCHES),
+            Math.toRadians(180.0)
+        )
+        val deliverPosition2Pose = Pose2d(
+            51.5,
+            36.0,
+            Math.toRadians(180.0)
+        )
+        val deliverPosition3Pose = Pose2d(
+            51.5,
+            36.0 - alliance.adjust(APRIL_TAG_SPACING_INCHES),
+            Math.toRadians(180.0)
+        )
 
         // Spike delivery positions
         val spikePosition1 = mecanumDrive.trajectorySequenceBuilder(startingPose)
@@ -70,13 +101,13 @@ abstract class BlueBackdropAuton(private val parkPosition: ParkPosition) : OpMod
          * Get spike delivery position
          */
         while (!isStarted && !isStopRequested) {
-            spikeLocation = tfod.getRandomizedSpikeLocation()
+            spikeLocation = tfod?.getRandomizedSpikeLocation() ?: RandomizedSpikeLocation.UNKNOWN
             multiTelemetry.addData("Spike Location:", spikeLocation)
             multiTelemetry.update()
         }
 
         // Shut down camera to save cycles
-        tfod.suspend()
+        tfod?.suspend()
 
         when (spikeLocation) {
             RandomizedSpikeLocation.RIGHT -> {
@@ -105,13 +136,13 @@ abstract class BlueBackdropAuton(private val parkPosition: ParkPosition) : OpMod
             .build()
 
         val parkInsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .lineToLinearHeading(Pose2d(49.5, 12.0, Math.toRadians(180.0)))
-            .lineToLinearHeading(Pose2d(62.0, 12.0, Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(49.5, alliance.adjust(12.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(62.0, alliance.adjust(12.0), Math.toRadians(180.0)))
             .build()
 
         val parkOutsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .lineToLinearHeading(Pose2d(49.5, 60.0, Math.toRadians(180.0)))
-            .lineToLinearHeading(Pose2d(62.0, 60.0, Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(49.5, alliance.adjust(60.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(62.0, alliance.adjust(60.0), Math.toRadians(180.0)))
             .build()
 
         val parkTrajectory = when (parkPosition) {
@@ -133,5 +164,7 @@ abstract class BlueBackdropAuton(private val parkPosition: ParkPosition) : OpMod
 
     companion object {
         private const val APRIL_TAG_SPACING_INCHES = 6.0
+        private const val CENTER_SPIKE_DEGREES = 270.0
+        private const val SIDE_SPIKE_ROTATION_DEGREES = 45.0
     }
 }

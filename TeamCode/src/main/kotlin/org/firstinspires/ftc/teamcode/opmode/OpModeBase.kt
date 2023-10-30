@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 import org.firstinspires.ftc.teamcode.subsystem.DroneSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.TransferSubsystem
+import org.firstinspires.ftc.teamcode.vision.TensorFlowObjectDetection
 import java.lang.Exception
 
 abstract class OpModeBase : CommandOpMode() {
@@ -21,12 +22,16 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var accessoryGamepad: GamepadEx
     lateinit var multiTelemetry: MultipleTelemetry
 
+    // Subsystems
     var deliverySubsystem: DeliverySubsystem? = null
     var droneSubsystem: DroneSubsystem? = null
     var intakeSubsystem: IntakeSubsystem? = null
     var transferSubsystem: TransferSubsystem? = null
 //    var suspendSubsystem: SuspendSubsystem? = null
 //    var doubleVisionSubsystem: DoubleVision? = null
+
+    // Vision
+    var tfod: TensorFlowObjectDetection? = null
 
     @SuppressLint("SdCardPath")
     private val tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite"
@@ -65,6 +70,12 @@ abstract class OpModeBase : CommandOpMode() {
 
         register(*subsystems.filterNotNull().toTypedArray())
 
+        // Vision
+        if (isAuto) {
+            tfod = TensorFlowObjectDetection(hardware, multiTelemetry)
+        }
+
+        // Game pads
         driverGamepad = GamepadEx(gamepad1)
         accessoryGamepad = GamepadEx(gamepad2)
     }
@@ -73,7 +84,7 @@ abstract class OpModeBase : CommandOpMode() {
         RED, BLUE;
 
         fun adjust(input: Double): Double {
-            return if (this == RED) input else -input
+            return if (this == BLUE) input else -input
         }
     }
 }
