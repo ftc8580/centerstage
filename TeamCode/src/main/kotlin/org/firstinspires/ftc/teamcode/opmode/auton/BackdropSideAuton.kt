@@ -32,7 +32,7 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
         val spikePosition1Pose = Pose2d(
             18.0,
             alliance.adjust(36.0),
-            Math.toRadians(CENTER_SPIKE_DEGREES + alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
+            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) + alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
         )
         val spikePosition2Pose = Pose2d(
             12.0,
@@ -42,7 +42,7 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
         val spikePosition3Pose = Pose2d(
             6.0,
             alliance.adjust(36.0),
-            Math.toRadians(CENTER_SPIKE_DEGREES - alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
+            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) - alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
         )
 
         // Pose to make sure we don't run into the dropped pixel
