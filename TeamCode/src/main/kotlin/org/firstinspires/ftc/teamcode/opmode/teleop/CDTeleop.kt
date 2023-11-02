@@ -27,7 +27,7 @@ class CDTeleop : OpModeBase() {
             Pose2d(
                 driverGamepad.leftY * driveSpeedScale,
                 -driverGamepad.leftX * driveSpeedScale,
-                driverGamepad.rightX * driveSpeedScale
+                -driverGamepad.rightX * driveSpeedScale
             )
         )
 
@@ -39,21 +39,33 @@ class CDTeleop : OpModeBase() {
         if (accessoryGamepad.isDown(GamepadKeys.Button.A)) {
             if (leftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.transferMotor?.power = -leftTriggerValue
+            } else {
+                hardware.transferMotor?.power = 0.0
             }
+
             if (rightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.intakeMotor?.power = -rightTriggerValue
+            } else {
+                hardware.intakeMotor?.power = 0.0
             }
         } else {
             if (leftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.transferMotor?.power = leftTriggerValue
+            } else {
+                hardware.transferMotor?.power = 0.0
             }
+
             if (rightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.intakeMotor?.power = rightTriggerValue
+            } else {
+                hardware.intakeMotor?.power = 0.0
             }
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
             hardware.viperMotor?.power = -accessoryGamepad.leftY
+        } else {
+            hardware.viperMotor?.power = 0.0
         }
 
         writeTelemetry()
@@ -106,7 +118,7 @@ class CDTeleop : OpModeBase() {
         telemetry.addLine()
 
         hardware.viperAngleServo?.let {
-            telemetry.addLine("bucket pos: ${it.position}")
+            telemetry.addLine("viper angle pos: ${it.position}")
         } ?: telemetry.addLine("[WARNING] Viper angle servo not found")
 
         hardware.viperPot?.let {
