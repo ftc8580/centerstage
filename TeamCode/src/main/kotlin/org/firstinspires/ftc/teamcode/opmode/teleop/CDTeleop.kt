@@ -8,11 +8,13 @@ import org.firstinspires.ftc.teamcode.command.bucket.CloseBucket
 import org.firstinspires.ftc.teamcode.command.bucket.OpenBucket
 import org.firstinspires.ftc.teamcode.command.drone.LaunchDrone
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
+import org.firstinspires.ftc.teamcode.util.PIDController
 
 @Suppress("UNUSED")
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
+    private var viperPid = PIDController()
 
     override fun initialize() {
         initHardware(false)
@@ -63,9 +65,9 @@ class CDTeleop : OpModeBase() {
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
-            hardware.viperMotor?.power = -accessoryGamepad.leftY
+            deliverySubsystem?.setViperPower(-accessoryGamepad.leftY, viperPid)
         } else {
-            hardware.viperMotor?.power = 0.0
+            deliverySubsystem?.setViperPower(0.0)
         }
 
         writeTelemetry()

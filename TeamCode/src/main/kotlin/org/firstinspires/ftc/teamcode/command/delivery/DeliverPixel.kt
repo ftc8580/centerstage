@@ -23,7 +23,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem) : CommandBa
         when (currentState) {
             DeliverPixelState.STARTED -> {
                 runtime.reset()
-                deliverySubsystem.setHeight(DELIVERY_HEIGHT)
+                deliverySubsystem.setViperPosition(DELIVERY_HEIGHT)
                 currentState = DeliverPixelState.RAISING
             }
             DeliverPixelState.RAISING -> {
@@ -35,7 +35,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem) : CommandBa
             DeliverPixelState.DROPPING_PIXEL -> {
                 if (runtime.isTimedOut(targetTimeMs)) {
                     deliverySubsystem.closeBucket()
-                    deliverySubsystem.setHeight(INTAKE_HEIGHT)
+                    deliverySubsystem.setViperPosition(INTAKE_HEIGHT)
                     currentState = DeliverPixelState.LOWERING
                 }
             }
@@ -56,7 +56,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem) : CommandBa
 
     override fun end(interrupted: Boolean) {
         if (interrupted) {
-            deliverySubsystem.setHeight(INTAKE_HEIGHT)
+            deliverySubsystem.setViperPosition(INTAKE_HEIGHT)
         }
 
         currentState = DeliverPixelState.IDLE
