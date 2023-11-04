@@ -133,6 +133,10 @@ class CDTeleop : OpModeBase() {
             telemetry.addLine("bucket pos: ${it.position}")
         } ?: telemetry.addLine("[WARNING] Bucket servo not found")
 
+        hardware.droneServo?.let {
+            telemetry.addLine("drone pos: ${it.position}")
+        } ?: telemetry.addLine("[WARNING] Drone servo not found")
+
         telemetry.update()
     }
 

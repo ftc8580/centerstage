@@ -10,7 +10,7 @@ data class CDConfig(
     val transferMotor: String? = "transferMotor",
     val climbMotor: String? = "climbMotor",
     val bucketServo: String? = "bucketServo",
-    val viperAngleServo: String? = "viperAngle",
+    val viperAngleServo: String? = "viperServo",
     val droneServo: String? = "droneServo",
     val viperPot: String? = "viperPot",
     val direction: DcMotorSimple.Direction = DcMotorSimple.Direction.FORWARD,
