@@ -25,6 +25,8 @@ class CDTeleop : OpModeBase() {
     override fun run() {
         super.run()
 
+        telemetry.clearAll()
+
         mecanumDrive.setDrivePower(
             Pose2d(
                 driverGamepad.leftY * driveSpeedScale,
@@ -68,6 +70,12 @@ class CDTeleop : OpModeBase() {
             deliverySubsystem?.setViperPower(-accessoryGamepad.leftY, viperPid)
         } else {
             deliverySubsystem?.setViperPower(0.0)
+        }
+
+        hardware.viperTouch?.let {
+            if (it.isPressed) {
+                deliverySubsystem?.setViperBottom()
+            }
         }
 
         writeTelemetry()
@@ -114,8 +122,6 @@ class CDTeleop : OpModeBase() {
     }
 
     private fun writeTelemetry() {
-        telemetry.clearAll()
-
         telemetry.addLine("speed mult: $driveSpeedScale")
         telemetry.addLine()
 

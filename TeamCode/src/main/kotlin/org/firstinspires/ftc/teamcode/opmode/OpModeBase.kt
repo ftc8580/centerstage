@@ -34,7 +34,7 @@ abstract class OpModeBase : CommandOpMode() {
     var tfod: TensorFlowObjectDetection? = null
 
     @SuppressLint("SdCardPath")
-    private val tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDNewSleeve.tflite"
+    private val tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDCenterStage.tflite"
 
     fun initHardware(isAuto: Boolean) {
         hardware = HardwareManager(CDConfig(), hardwareMap)
@@ -64,7 +64,7 @@ abstract class OpModeBase : CommandOpMode() {
             deliverySubsystem,
             droneSubsystem,
             intakeSubsystem,
-//            transferSubsystem,
+            transferSubsystem,
 //            suspendSubsystem
         )
 
@@ -72,7 +72,12 @@ abstract class OpModeBase : CommandOpMode() {
 
         // Vision
         if (isAuto) {
-            tfod = TensorFlowObjectDetection(hardware, multiTelemetry)
+            tfod = TensorFlowObjectDetection(
+                hardware,
+                multiTelemetry,
+                tfliteModelFileName,
+                listOf("Blue_Prop", "Red_Prop")
+            )
         }
 
         // Game pads

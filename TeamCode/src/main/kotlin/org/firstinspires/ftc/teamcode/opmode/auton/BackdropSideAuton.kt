@@ -101,8 +101,9 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
          * Get spike delivery position
          */
         while (!isStarted && !isStopRequested) {
+            multiTelemetry.clearAll()
             spikeLocation = tfod?.getRandomizedSpikeLocation() ?: RandomizedSpikeLocation.UNKNOWN
-            multiTelemetry.addData("Spike Location:", spikeLocation)
+            tfod?.telemetryTfod()
             multiTelemetry.update()
         }
 

@@ -16,6 +16,6 @@ class DroneSubsystem(hardware: HardwareManager) : SubsystemBase() {
     }
 
     companion object {
-        private const val LAUNCH_POSITION = 1.0
+        private const val LAUNCH_POSITION = 0.0
     }
 }

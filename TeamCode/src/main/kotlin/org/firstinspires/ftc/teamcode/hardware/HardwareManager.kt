@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.Servo.Direction
+import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
 import org.firstinspires.ftc.teamcode.util.Encoder
@@ -43,6 +45,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
 
     // Sensors
     var viperPot: AnalogInput? = null
+    var viperTouch: TouchSensor? = null
 
     // DoubleVision
     var webcam: WebcamName? = null
@@ -137,10 +140,14 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
         droneServo = safelyGetHardware<Servo>(hardware, config.droneServo)
         viperAngleServo = safelyGetHardware<Servo>(hardware, config.viperAngleServo)
+
+        bucketServo?.position = 1.0
+        viperAngleServo?.direction = Direction.REVERSE
     }
 
     private fun initializeSensors(hardware: HardwareMap) {
         viperPot = safelyGetHardware<AnalogInput>(hardware, config.viperPot)
+        viperTouch = safelyGetHardware<TouchSensor>(hardware, config.viperTouch)
     }
 
     private inline fun <reified T> safelyGetHardware(hardware: HardwareMap, deviceName: String?): T? {
