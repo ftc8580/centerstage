@@ -8,13 +8,11 @@ import org.firstinspires.ftc.teamcode.command.bucket.CloseBucket
 import org.firstinspires.ftc.teamcode.command.bucket.OpenBucket
 import org.firstinspires.ftc.teamcode.command.drone.LaunchDrone
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
-import org.firstinspires.ftc.teamcode.util.PIDController
 
 @Suppress("UNUSED")
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
-    private var viperPid = PIDController()
 
     override fun initialize() {
         initHardware(false)
@@ -40,6 +38,7 @@ class CDTeleop : OpModeBase() {
         val leftTriggerValue = accessoryGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
         val rightTriggerValue = accessoryGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
 
+        // Reverse intake and transfer motors if the A button is held down
         if (accessoryGamepad.isDown(GamepadKeys.Button.A)) {
             if (leftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
                 hardware.transferMotor?.power = -leftTriggerValue
@@ -67,7 +66,7 @@ class CDTeleop : OpModeBase() {
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
-            deliverySubsystem?.setViperPower(-accessoryGamepad.leftY, viperPid)
+            deliverySubsystem?.setViperPower(-accessoryGamepad.leftY)
         } else {
             deliverySubsystem?.setViperPower(0.0)
         }
@@ -90,8 +89,8 @@ class CDTeleop : OpModeBase() {
         speedFastButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_FAST })
         speedSlowButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_SLOW })
         normalDriveButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_NORMAL})
-        if (droneSubsystem != null) {
-            droneReleaseButton.whenPressed(LaunchDrone(droneSubsystem!!))
+        droneSubsystem?.let {
+            droneReleaseButton.whenPressed(LaunchDrone(it))
         }
     }
 
@@ -105,9 +104,9 @@ class CDTeleop : OpModeBase() {
         // TODO: get the rest of the buttons
 
         // TODO: Assign commands to buttons
-        if (deliverySubsystem != null) {
-            openBucketButton.whenPressed(OpenBucket(deliverySubsystem!!))
-            closeBucketButton.whenPressed(CloseBucket(deliverySubsystem!!))
+        deliverySubsystem?.let {
+            openBucketButton.whenPressed(OpenBucket(it))
+            closeBucketButton.whenPressed(CloseBucket(it))
         }
 
         armAngleUpButton.whenActive(Runnable {
@@ -122,6 +121,7 @@ class CDTeleop : OpModeBase() {
     }
 
     private fun writeTelemetry() {
+        telemetry.addLine()
         telemetry.addLine("speed mult: $driveSpeedScale")
         telemetry.addLine()
 

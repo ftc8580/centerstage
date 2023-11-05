@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystem
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
-class TransferSubsystem(hardware: HardwareManager) : SubsystemBase() {
+class TransferSubsystem(hardware: HardwareManager, private val telemetry: MultipleTelemetry? = null) : SubsystemBase() {
     private var intakeMotor: DcMotorEx
 
     init {
@@ -12,19 +13,17 @@ class TransferSubsystem(hardware: HardwareManager) : SubsystemBase() {
     }
 
     fun runIntake() {
-        run(1.0)
+        telemetry?.addLine("Running intake with motor power = 1")
+        intakeMotor.power = 1.0
     }
 
     fun runEject() {
-        run(-1.0)
+        telemetry?.addLine("Ejecting intake with motor power = -1")
+        intakeMotor.power = -1.0
     }
 
     fun stop() {
-        intakeMotor.setMotorDisable()
-    }
-
-    private fun run(motorPower: Double) {
-        intakeMotor.power = motorPower
-        intakeMotor.setMotorEnable()
+        telemetry?.addLine("Stopping intake")
+        intakeMotor.power = 0.0
     }
 }

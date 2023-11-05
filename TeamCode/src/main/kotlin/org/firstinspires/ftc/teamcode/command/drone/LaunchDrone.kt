@@ -8,12 +8,7 @@ class LaunchDrone(private val droneSubsystem: DroneSubsystem) : CommandBase() {
         addRequirements(droneSubsystem)
     }
 
-    private var launchInitialized = false
-
-    override fun execute() {
+    override fun initialize() {
         droneSubsystem.launch()
-        launchInitialized = true
     }
-
-    override fun isFinished(): Boolean = launchInitialized
 }

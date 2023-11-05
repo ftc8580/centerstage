@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.util.MathUtil
-import org.firstinspires.ftc.teamcode.util.PIDController
 import org.firstinspires.ftc.teamcode.util.ServoUtil
 import kotlin.math.abs
 
@@ -63,7 +62,6 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
 
     fun setViperPower(
         power: Double,
-        pidController: PIDController? = null
     ) {
         val currentPosition = viperMotor.currentPosition
 
@@ -85,21 +83,10 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
             return
         }
 
-//        val targetPosition = if (power > 0) {
-//            viperTopPosition
-//        } else if (power < 0) {
-//            viperBottomPosition
-//        } else {
-//            0
-//        }
-
-//        telemetry?.addLine("viper target: $targetPosition")
-
-        if (power == 0.0 || pidController == null) {
+        // Save some calculations if power is 0
+        if (power == 0.0) {
             viperMotor.power = power
         } else {
-//            val controlSignal = pidController.calculateControlSignal(currentPosition.toDouble(), targetPosition.toDouble())
-//            val powerMultiplier = abs(controlSignal / VIPER_RANGE)
             val adjustedPower = adjustViperPower(power)
 
             telemetry?.addLine("viper adj power: $adjustedPower")

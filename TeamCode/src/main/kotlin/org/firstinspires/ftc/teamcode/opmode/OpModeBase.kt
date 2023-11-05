@@ -42,10 +42,10 @@ abstract class OpModeBase : CommandOpMode() {
         multiTelemetry = MultipleTelemetry(telemetry)
 
         // Subsystems
-        deliverySubsystem = try { DeliverySubsystem(hardware) } catch (e: Exception) { null }
-        droneSubsystem = try { DroneSubsystem(hardware) } catch (e: Exception) { null }
-        intakeSubsystem = try { IntakeSubsystem(hardware) } catch (e: Exception) { null }
-        transferSubsystem = try { TransferSubsystem(hardware) } catch (e: Exception) { null }
+        deliverySubsystem = try { DeliverySubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
+        droneSubsystem = try { DroneSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
+        intakeSubsystem = try { IntakeSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
+        transferSubsystem = try { TransferSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
 //        suspendSubsystem = try { SuspendSubsystem(hardware) } catch (e: Exception) { null }
 //        doubleVisionSubsystem = try {
 //            DoubleVision(
