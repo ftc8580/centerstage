@@ -6,6 +6,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.bucket.CloseBucket
 import org.firstinspires.ftc.teamcode.command.bucket.OpenBucket
+import org.firstinspires.ftc.teamcode.command.delivery.DeliveryPositionOne
+import org.firstinspires.ftc.teamcode.command.delivery.GoToBottomPosition
 import org.firstinspires.ftc.teamcode.command.drone.LaunchDrone
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
@@ -13,6 +15,7 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
+    private var controlIntakeSeparately = true
 
     override fun initialize() {
         initHardware(false)
@@ -37,31 +40,25 @@ class CDTeleop : OpModeBase() {
 
         val leftTriggerValue = accessoryGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
         val rightTriggerValue = accessoryGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
+        val intakeIsReversed = accessoryGamepad.isDown(GamepadKeys.Button.A)
 
-        // Reverse intake and transfer motors if the A button is held down
-        if (accessoryGamepad.isDown(GamepadKeys.Button.A)) {
+        if (controlIntakeSeparately) {
             if (leftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
-                hardware.transferMotor?.power = -leftTriggerValue
+                intakeSubsystem?.setTransferPower(leftTriggerValue, intakeIsReversed)
             } else {
-                hardware.transferMotor?.power = 0.0
+                intakeSubsystem?.setTransferPower(0.0)
             }
 
             if (rightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
-                hardware.intakeMotor?.power = -rightTriggerValue
+                intakeSubsystem?.setIntakePower(rightTriggerValue, intakeIsReversed)
             } else {
-                hardware.intakeMotor?.power = 0.0
+                intakeSubsystem?.setIntakePower(0.0)
             }
         } else {
-            if (leftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
-                hardware.transferMotor?.power = leftTriggerValue
-            } else {
-                hardware.transferMotor?.power = 0.0
-            }
-
             if (rightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
-                hardware.intakeMotor?.power = rightTriggerValue
+                intakeSubsystem?.runIntake(rightTriggerValue, intakeIsReversed)
             } else {
-                hardware.intakeMotor?.power = 0.0
+                intakeSubsystem?.runIntake(0.0)
             }
         }
 
@@ -95,18 +92,25 @@ class CDTeleop : OpModeBase() {
     }
 
     private fun initializeCoDriverGamepad(gamepad: GamepadEx) {
+        // Bucket
         val openBucketButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
         val closeBucketButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-        val armAngleUpButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-        val armAngleDownButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-        val clearIntakeButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
-        val shortModeButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
-        // TODO: get the rest of the buttons
 
-        // TODO: Assign commands to buttons
+        // Viper arm
+        // The arm angle buttons are reversed to fix an issue with the Servo direction
+        val armAngleUpButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+        val armAngleDownButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+        val retractButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
+        val extendPositionOneButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+
+        // Intake controls
+        val toggleIntakeControlButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
+
         deliverySubsystem?.let {
             openBucketButton.whenPressed(OpenBucket(it))
             closeBucketButton.whenPressed(CloseBucket(it))
+            retractButton.whenPressed(GoToBottomPosition(it))
+            extendPositionOneButton.whenPressed(DeliveryPositionOne(it))
         }
 
         armAngleUpButton.whenActive(Runnable {
@@ -118,6 +122,10 @@ class CDTeleop : OpModeBase() {
             val currentServoPosition = hardware.viperAngleServo?.position ?: 0.0
             hardware.viperAngleServo?.position = currentServoPosition - VIPER_ANGLE_SERVO_INCREMENT
         })
+
+        intakeSubsystem?.let {
+            toggleIntakeControlButton.whenPressed(Runnable { controlIntakeSeparately = !controlIntakeSeparately })
+        }
     }
 
     private fun writeTelemetry() {

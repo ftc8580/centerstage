@@ -13,6 +13,7 @@ import kotlin.math.abs
 class DeliverySubsystem(hardware: HardwareManager, private val telemetry: MultipleTelemetry? = null) : SubsystemBase() {
     private var viperMotor: DcMotorEx
     private var bucketServo: Servo
+    private var viperAngleServo: Servo
     private var viperBottomPosition: Int
     private var viperTopPosition: Int
     private var viperBottomDecelPosition: Int
@@ -25,6 +26,8 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         bucketServo = hardware.bucketServo!!
         bucketServo.scaleRange(SERVO_SCALE_RANGE_MIN, SERVO_SCALE_RANGE_MAX)
         bucketServo.position = SERVO_START_POSITION
+
+        viperAngleServo = hardware.viperAngleServo!!
 
         viperBottomPosition = viperMotor.currentPosition
         viperTopPosition = viperBottomPosition - VIPER_RANGE
@@ -41,6 +44,8 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         viperBottomDecelPosition = viperBottomPosition - VIPER_BACKOFF_RANGE
         viperTopDecelPosition = viperTopPosition + VIPER_BACKOFF_RANGE
     }
+
+    fun isRetracted() = touchSensor.isPressed
 
     fun closeBucket() {
         bucketServo.position = 0.0
@@ -116,6 +121,14 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         return ServoUtil.getSweepTimeMs(0.0, 1.0, SERVO_SCALE_RANGE_MIN, SERVO_SCALE_RANGE_MAX)
     }
 
+    fun setAngleLow() {
+        viperAngleServo.position = VIPER_ANGLE_POSITION_LOW
+    }
+
+    fun setAngleHigh() {
+        viperAngleServo.position = VIPER_ANGLE_POSITION_HIGH
+    }
+
     companion object {
         // TODO: Check these values
         private const val SERVO_SCALE_RANGE_MIN = 0.5
@@ -124,5 +137,8 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
 
         private const val VIPER_RANGE = 3000
         private const val VIPER_BACKOFF_RANGE = 300
+
+        private const val VIPER_ANGLE_POSITION_LOW = 0.18
+        private const val VIPER_ANGLE_POSITION_HIGH = 0.25
     }
 }

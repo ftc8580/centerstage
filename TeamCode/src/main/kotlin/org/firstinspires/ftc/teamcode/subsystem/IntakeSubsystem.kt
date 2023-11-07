@@ -7,12 +7,23 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 class IntakeSubsystem(hardware: HardwareManager, private val telemetry: MultipleTelemetry? = null) : SubsystemBase() {
     private val intakeMotor: DcMotorEx
+    private val transferMotor: DcMotorEx
 
     init {
         intakeMotor = hardware.intakeMotor!!
+        transferMotor = hardware.transferMotor!!
     }
 
-    fun moveTo(position: Double) {
-        TODO()
+    fun setIntakePower(power: Double, isReversed: Boolean = false) {
+        intakeMotor.power = if (isReversed) -power else power
+    }
+
+    fun setTransferPower(power: Double, isReversed: Boolean = false) {
+        transferMotor.power = if (isReversed) -power else power
+    }
+
+    fun runIntake(power: Double, isReversed: Boolean = false) {
+        setIntakePower(power, isReversed)
+        setTransferPower(power, isReversed)
     }
 }
