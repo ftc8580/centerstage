@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.command.bucket.OpenBucket
 import org.firstinspires.ftc.teamcode.command.delivery.DeliveryPositionOne
 import org.firstinspires.ftc.teamcode.command.delivery.GoToBottomPosition
 import org.firstinspires.ftc.teamcode.command.drone.LaunchDrone
+import org.firstinspires.ftc.teamcode.command.suspend.DeployHooks
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
 @Suppress("UNUSED")
@@ -68,6 +69,12 @@ class CDTeleop : OpModeBase() {
             deliverySubsystem?.setViperPower(0.0)
         }
 
+        if (accessoryGamepad.rightY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.rightY < -VARIABLE_INPUT_DEAD_ZONE) {
+            suspendSubsystem?.setMotorPower(accessoryGamepad.rightY)
+        } else {
+            suspendSubsystem?.setMotorPower(0.0)
+        }
+
         hardware.viperTouch?.let {
             if (it.isPressed) {
                 deliverySubsystem?.setViperBottom()
@@ -106,6 +113,9 @@ class CDTeleop : OpModeBase() {
         // Intake controls
         val toggleIntakeControlButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
 
+        // Suspend
+        val deployHooksButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+
         deliverySubsystem?.let {
             openBucketButton.whenPressed(OpenBucket(it))
             closeBucketButton.whenPressed(CloseBucket(it))
@@ -126,12 +136,20 @@ class CDTeleop : OpModeBase() {
         intakeSubsystem?.let {
             toggleIntakeControlButton.whenPressed(Runnable { controlIntakeSeparately = !controlIntakeSeparately })
         }
+
+        suspendSubsystem?.let {
+            deployHooksButton.whenPressed(DeployHooks(it))
+        }
     }
 
     private fun writeTelemetry() {
         telemetry.addLine()
         telemetry.addLine("speed mult: $driveSpeedScale")
         telemetry.addLine()
+
+        hardware.suspendMotor?.let {
+            telemetry.addLine("suspend motor pos: ${it.currentPosition}")
+        } ?: telemetry.addLine("[WARNING] Suspend motor not found")
 
         hardware.viperAngleServo?.let {
             telemetry.addLine("viper angle pos: ${it.position}")
@@ -145,13 +163,17 @@ class CDTeleop : OpModeBase() {
             telemetry.addLine("viper motor pos: ${it.currentPosition}")
         } ?: telemetry.addLine("[WARNING] Viper motor not found")
 
-        hardware.bucketServo?.let {
-            telemetry.addLine("bucket pos: ${it.position}")
-        } ?: telemetry.addLine("[WARNING] Bucket servo not found")
-
         hardware.droneServo?.let {
             telemetry.addLine("drone pos: ${it.position}")
         } ?: telemetry.addLine("[WARNING] Drone servo not found")
+
+        hardware.suspendServoLeft?.let {
+            telemetry.addLine("suspendServoLeft pos: ${it.position}")
+        } ?: telemetry.addLine("[WARNING] suspendServoLeft not found")
+
+        hardware.suspendServoRight?.let {
+            telemetry.addLine("suspendServoRight pos: ${it.position}")
+        } ?: telemetry.addLine("[WARNING] suspendServoRight servo not found")
 
         telemetry.update()
     }

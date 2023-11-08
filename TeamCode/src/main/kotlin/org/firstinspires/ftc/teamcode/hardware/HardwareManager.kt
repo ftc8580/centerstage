@@ -31,12 +31,14 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
     var viperMotor: DcMotorEx? = null
     var transferMotor: DcMotorEx? = null
     var intakeMotor: DcMotorEx? = null
-    var climbMotor: DcMotorEx? = null
+    var suspendMotor: DcMotorEx? = null
 
     // Servos
     var bucketServo: Servo? = null
     var droneServo: Servo? = null
     var viperAngleServo: Servo? = null
+    var suspendServoLeft: Servo? = null
+    var suspendServoRight: Servo? = null
 
     // Dead wheels
     var leftEncoder: Encoder? = null
@@ -133,17 +135,21 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         transferMotor?.direction = DcMotorSimple.Direction.REVERSE
 
         intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
-        climbMotor = safelyGetHardware<DcMotorEx>(hardware, config.climbMotor)
+        suspendMotor = safelyGetHardware<DcMotorEx>(hardware, config.suspendMotor)
     }
 
     private fun initializeServos(hardware: HardwareMap) {
         bucketServo = safelyGetHardware<Servo>(hardware, config.bucketServo)
         droneServo = safelyGetHardware<Servo>(hardware, config.droneServo)
         viperAngleServo = safelyGetHardware<Servo>(hardware, config.viperAngleServo)
+        suspendServoLeft = safelyGetHardware<Servo>(hardware, config.suspendServoLeft)
+        suspendServoRight = safelyGetHardware<Servo>(hardware, config.suspendServoRight)
 
         bucketServo?.position = 1.0
         droneServo?.position = 0.0
+        droneServo?.direction = Direction.REVERSE
         viperAngleServo?.direction = Direction.REVERSE
+        suspendServoRight?.direction = Direction.REVERSE
     }
 
     private fun initializeSensors(hardware: HardwareMap) {

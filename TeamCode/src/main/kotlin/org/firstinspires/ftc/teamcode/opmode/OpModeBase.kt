@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 import org.firstinspires.ftc.teamcode.subsystem.DroneSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.SuspendSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.TransferSubsystem
 import org.firstinspires.ftc.teamcode.vision.TensorFlowObjectDetection
 import java.lang.Exception
@@ -27,8 +28,7 @@ abstract class OpModeBase : CommandOpMode() {
     var droneSubsystem: DroneSubsystem? = null
     var intakeSubsystem: IntakeSubsystem? = null
     var transferSubsystem: TransferSubsystem? = null
-//    var suspendSubsystem: SuspendSubsystem? = null
-//    var doubleVisionSubsystem: DoubleVision? = null
+    var suspendSubsystem: SuspendSubsystem? = null
 
     // Vision
     var tfod: TensorFlowObjectDetection? = null
@@ -46,26 +46,14 @@ abstract class OpModeBase : CommandOpMode() {
         droneSubsystem = try { DroneSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
         intakeSubsystem = try { IntakeSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
         transferSubsystem = try { TransferSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
-//        suspendSubsystem = try { SuspendSubsystem(hardware) } catch (e: Exception) { null }
-//        doubleVisionSubsystem = try {
-//            DoubleVision(
-//                hardware,
-//                multiTelemetry,
-//                tfliteModelFileName,
-//                listOf(
-//                    "1 Pacman",
-//                    "2 Cherry",
-//                    "3 Ghost"
-//                )
-//            )
-//        } catch (e: Exception) { null }
+        suspendSubsystem = try { SuspendSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
 
         val subsystems = listOf<Subsystem?>(
             deliverySubsystem,
             droneSubsystem,
             intakeSubsystem,
             transferSubsystem,
-//            suspendSubsystem
+            suspendSubsystem
         )
 
         register(*subsystems.filterNotNull().toTypedArray())
