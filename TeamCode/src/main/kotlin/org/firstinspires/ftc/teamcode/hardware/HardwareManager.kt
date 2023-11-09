@@ -150,6 +150,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         droneServo?.direction = Direction.REVERSE
         viperAngleServo?.direction = Direction.REVERSE
         suspendServoRight?.direction = Direction.REVERSE
+        suspendServoLeft?.direction = Direction.REVERSE
     }
 
     private fun initializeSensors(hardware: HardwareMap) {

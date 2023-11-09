@@ -65,6 +65,8 @@ class TensorFlowObjectDetection(
             telemetry.addData("- Position", "%.0f / %.0f", x, y)
             telemetry.addData("- Size", "%.0f x %.0f", recognition.width, recognition.height)
         }
+
+        telemetry.addData("- Spike Location", getRandomizedSpikeLocation())
     }
 
     fun suspend() {

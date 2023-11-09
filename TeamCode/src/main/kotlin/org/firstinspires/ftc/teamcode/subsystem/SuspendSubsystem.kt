@@ -24,8 +24,7 @@ class SuspendSubsystem(hardware: HardwareManager, private val telemetry: Multipl
     }
 
     fun setMotorPower(power: Double) {
-        val suspendPower = MathUtil.clamp(-0.5, 0.5, power)
-        suspendMotor.power = suspendPower
+        suspendMotor.power = power
     }
 
     companion object {
