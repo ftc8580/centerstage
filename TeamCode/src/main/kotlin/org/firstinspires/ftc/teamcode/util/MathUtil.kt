@@ -17,7 +17,9 @@ class MathUtil {
         }
 
         fun clamp(min: Int, max: Int, input: Int): Int {
-            return max.coerceAtMost(min.coerceAtLeast(input))
+            val correctedMin = if (min > max) max else min
+            val correctedMax = if (min > max) min else max
+            return correctedMax.coerceAtMost(correctedMin.coerceAtLeast(input))
         }
 
         fun round(input: Double): Double {

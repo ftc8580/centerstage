@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 import org.firstinspires.ftc.teamcode.subsystem.DroneSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.SuspendSubsystem
-import org.firstinspires.ftc.teamcode.subsystem.TransferSubsystem
 import org.firstinspires.ftc.teamcode.vision.TensorFlowObjectDetection
 import java.lang.Exception
 
@@ -27,7 +26,6 @@ abstract class OpModeBase : CommandOpMode() {
     var deliverySubsystem: DeliverySubsystem? = null
     var droneSubsystem: DroneSubsystem? = null
     var intakeSubsystem: IntakeSubsystem? = null
-    var transferSubsystem: TransferSubsystem? = null
     var suspendSubsystem: SuspendSubsystem? = null
 
     // Vision
@@ -45,14 +43,12 @@ abstract class OpModeBase : CommandOpMode() {
         deliverySubsystem = try { DeliverySubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
         droneSubsystem = try { DroneSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
         intakeSubsystem = try { IntakeSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
-        transferSubsystem = try { TransferSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
         suspendSubsystem = try { SuspendSubsystem(hardware, multiTelemetry) } catch (e: Exception) { null }
 
         val subsystems = listOf<Subsystem?>(
             deliverySubsystem,
             droneSubsystem,
             intakeSubsystem,
-            transferSubsystem,
             suspendSubsystem
         )
 

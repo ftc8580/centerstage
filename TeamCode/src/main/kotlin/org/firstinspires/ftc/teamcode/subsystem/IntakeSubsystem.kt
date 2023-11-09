@@ -26,4 +26,18 @@ class IntakeSubsystem(hardware: HardwareManager, private val telemetry: Multiple
         setIntakePower(power, isReversed)
         setTransferPower(power, isReversed)
     }
+
+    fun runIntake() {
+        runIntake(1.0)
+    }
+
+    fun runEject() {
+        telemetry?.addLine("Ejecting intake with motor power = -1")
+        setIntakePower(0.75, true)
+    }
+
+    fun stop() {
+        telemetry?.addLine("Stopping intake")
+        runIntake(0.0)
+    }
 }

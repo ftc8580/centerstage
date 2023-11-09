@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.PtzControl
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.vision.VisionPortal
@@ -32,6 +33,8 @@ class TensorFlowObjectDetection(
 
             tfod = tfodBuilder.build()
         }
+
+        tfod.setMinResultConfidence(0.5f)
 
         visionPortal = VisionPortal.easyCreateWithDefaults(hardware.webcam, tfod)
     }
@@ -81,12 +84,10 @@ class TensorFlowObjectDetection(
         val imageWidth = recognition.imageWidth.toDouble()
         val imageHeight = recognition.imageHeight.toDouble()
 
-        val firstThirdX = floor(imageWidth * 0.3333)
-        val secondThirdX = floor(imageWidth * 0.6666)
+        val centerLine = floor(imageWidth * 0.5)
 
-        val left = Rectangle(0.0, firstThirdX, 0.0, imageHeight)
-        val center = Rectangle(firstThirdX + 0.0001, secondThirdX, 0.0, imageHeight)
-        val right = Rectangle(secondThirdX + 0.0001, imageWidth, 0.0, imageHeight)
+        val left = Rectangle(0.0, centerLine, 0.0, imageHeight)
+        val center = Rectangle(centerLine + 0.0001, imageWidth, 0.0, imageHeight)
 
         val recognitionRectangle = Rectangle(
             recognition.left.toDouble(),
@@ -97,11 +98,10 @@ class TensorFlowObjectDetection(
 
         val leftOverlap = left.overlapArea(recognitionRectangle)
         val centerOverlap = center.overlapArea(recognitionRectangle)
-        val rightOverlap = right.overlapArea(recognitionRectangle)
 
-        return if (leftOverlap > centerOverlap && leftOverlap > rightOverlap) {
+        return if (leftOverlap > centerOverlap) {
             RandomizedSpikeLocation.LEFT
-        } else if (centerOverlap > leftOverlap && centerOverlap > rightOverlap) {
+        } else if (centerOverlap > leftOverlap) {
             RandomizedSpikeLocation.CENTER
         } else {
             RandomizedSpikeLocation.RIGHT

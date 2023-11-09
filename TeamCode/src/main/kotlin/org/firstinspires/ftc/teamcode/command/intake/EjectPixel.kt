@@ -2,14 +2,16 @@ package org.firstinspires.ftc.teamcode.command.intake
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.command.intake.model.IntakeState
-import org.firstinspires.ftc.teamcode.subsystem.TransferSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
+import org.firstinspires.ftc.teamcode.util.CDRuntime
 
-class EjectPixel(private val transferSubsystem: TransferSubsystem) : CommandBase() {
+class EjectPixel(private val intakeSubsystem: IntakeSubsystem) : CommandBase() {
     init {
-        addRequirements(transferSubsystem)
+        addRequirements(intakeSubsystem)
     }
 
     private var currentState = IntakeState.IDLE
+    private var runtime = CDRuntime()
 
     override fun initialize() {
         currentState = IntakeState.STARTED
@@ -18,13 +20,14 @@ class EjectPixel(private val transferSubsystem: TransferSubsystem) : CommandBase
     override fun execute() {
         when (currentState) {
             IntakeState.STARTED -> {
-                transferSubsystem.runEject()
+                runtime.reset()
+                intakeSubsystem.runEject()
                 currentState = IntakeState.EJECTING
             }
             IntakeState.EJECTING -> {
                 // TODO: Watch for signal of pixel being picked up and then stop
-                if (true) {
-                    transferSubsystem.stop()
+                if (runtime.isTimedOut(1000.0)) {
+                    intakeSubsystem.stop()
                     currentState = IntakeState.FINISHED
                 }
             }
@@ -40,7 +43,7 @@ class EjectPixel(private val transferSubsystem: TransferSubsystem) : CommandBase
 
     override fun end(interrupted: Boolean) {
         if (interrupted) {
-            transferSubsystem.stop()
+            intakeSubsystem.stop()
         }
 
         currentState = IntakeState.IDLE

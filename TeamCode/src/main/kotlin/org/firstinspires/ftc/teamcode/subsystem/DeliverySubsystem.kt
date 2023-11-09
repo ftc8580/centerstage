@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.SubsystemBase
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
@@ -56,13 +57,23 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
     }
 
     fun setViperExtension(percent: Double) {
-        val extensionDistance = (percent * VIPER_RANGE).toInt()
+        val extensionDistance = ((percent / 100.0) * VIPER_RANGE).toInt()
         val targetPosition = viperBottomPosition - extensionDistance
+        telemetry?.addLine("setViperExtension")
+        telemetry?.addLine("percent: $percent (${percent / 100.0})")
+        telemetry?.addLine("viperBottomPosition: $viperBottomPosition")
+        telemetry?.addLine("extensionDistance: $extensionDistance")
+        telemetry?.addLine("runMode: ${viperMotor.mode}")
+        telemetry?.addLine("currentPos: ${viperMotor.currentPosition}")
+        telemetry?.addLine("targetPos: $targetPosition")
         setViperPosition(targetPosition)
+        telemetry?.addLine("isBusy: ${viperMotor.isBusy}")
     }
 
     fun setViperPosition(target: Int) {
         viperMotor.targetPosition = MathUtil.clamp(viperBottomPosition, viperTopPosition, target)
+        viperRunMode(DcMotor.RunMode.RUN_TO_POSITION)
+        viperMotor.power = 0.8
     }
 
     fun setViperPower(
@@ -101,6 +112,10 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         telemetry?.addLine("===")
     }
 
+    fun viperRunMode(mode: DcMotor.RunMode) {
+        viperMotor.mode = mode
+    }
+
     private fun adjustViperPower(power: Double): Double {
         val currentPosition = viperMotor.currentPosition
 
@@ -135,7 +150,7 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         private const val SERVO_SCALE_RANGE_MAX = 0.7
         private const val SERVO_START_POSITION = 0.0
 
-        private const val VIPER_RANGE = 3000
+        private const val VIPER_RANGE = 2950
         private const val VIPER_BACKOFF_RANGE = 300
 
         private const val VIPER_ANGLE_POSITION_LOW = 0.18

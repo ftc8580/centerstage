@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.opmode.auton
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixel
+import org.firstinspires.ftc.teamcode.command.delivery.ResetViperRunMode
 import org.firstinspires.ftc.teamcode.command.intake.EjectPixel
 import org.firstinspires.ftc.teamcode.config.ParkPosition
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.vision.RandomizedSpikeLocation
 import org.firstinspires.ftc.teamcode.vision.TensorFlowObjectDetection
+import java.lang.Exception
 
 abstract class BackdropSideAuton(private val alliance: Alliance, private val parkPosition: ParkPosition) : OpModeBase() {
     override fun initialize() {
@@ -30,19 +34,19 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
 
         // Spike Delivery Poses
         val spikePosition1Pose = Pose2d(
-            18.0,
+            12.0 + alliance.adjust(APRIL_TAG_SPACING_INCHES),
             alliance.adjust(36.0),
-            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) + alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
+            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) + SIDE_SPIKE_ROTATION_DEGREES)
         )
         val spikePosition2Pose = Pose2d(
             12.0,
-            alliance.adjust(32.5),
+            alliance.adjust(33.5),
             Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES))
         )
         val spikePosition3Pose = Pose2d(
-            6.0,
+            12.0 - alliance.adjust(APRIL_TAG_SPACING_INCHES),
             alliance.adjust(36.0),
-            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) - alliance.adjust(SIDE_SPIKE_ROTATION_DEGREES))
+            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) - SIDE_SPIKE_ROTATION_DEGREES)
         )
 
         // Pose to make sure we don't run into the dropped pixel
@@ -55,17 +59,17 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
         // Delivery positions
         val deliverPosition1Pose = Pose2d(
             51.5,
-            36.0 + alliance.adjust(APRIL_TAG_SPACING_INCHES),
+            alliance.adjust(36.5) + APRIL_TAG_SPACING_INCHES,
             Math.toRadians(180.0)
         )
         val deliverPosition2Pose = Pose2d(
             51.5,
-            36.0,
+            alliance.adjust(36.5),
             Math.toRadians(180.0)
         )
         val deliverPosition3Pose = Pose2d(
             51.5,
-            36.0 - alliance.adjust(APRIL_TAG_SPACING_INCHES),
+            alliance.adjust(36.5) - APRIL_TAG_SPACING_INCHES,
             Math.toRadians(180.0)
         )
 
@@ -83,15 +87,15 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
             .build()
 
         // Backdrop delivery positions
-        val deliverPosition1 = mecanumDrive.trajectorySequenceBuilder(spikePosition1Pose)
+        val deliverPosition1 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
             .lineToLinearHeading(deliverPosition1Pose)
             .build()
 
-        val deliverPosition2 = mecanumDrive.trajectorySequenceBuilder(spikePosition2Pose)
+        val deliverPosition2 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
             .lineToLinearHeading(deliverPosition2Pose)
             .build()
 
-        val deliverPosition3 = mecanumDrive.trajectorySequenceBuilder(spikePosition3Pose)
+        val deliverPosition3 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
             .lineToLinearHeading(deliverPosition3Pose)
             .build()
 
@@ -108,17 +112,17 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
         }
 
         // Shut down camera to save cycles
-        tfod?.suspend()
+//        try { tfod?.suspend() } catch(_: Exception) {}
 
         when (spikeLocation) {
-            RandomizedSpikeLocation.RIGHT -> {
+            RandomizedSpikeLocation.RIGHT,
+            RandomizedSpikeLocation.UNKNOWN -> {
                 spikePose = spikePosition3Pose
                 spikeTrajectory = spikePosition3
                 deliveryPose = deliverPosition3Pose
                 deliverTrajectory = deliverPosition3
             }
-            RandomizedSpikeLocation.CENTER,
-            RandomizedSpikeLocation.UNKNOWN-> {
+            RandomizedSpikeLocation.CENTER -> {
                 spikePose = spikePosition2Pose
                 spikeTrajectory = spikePosition2
                 deliveryPose = deliverPosition2Pose
@@ -138,12 +142,12 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
 
         val parkInsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
             .lineToLinearHeading(Pose2d(49.5, alliance.adjust(12.0), Math.toRadians(180.0)))
-            .lineToLinearHeading(Pose2d(62.0, alliance.adjust(12.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(60.0, alliance.adjust(12.0), Math.toRadians(180.0)))
             .build()
 
         val parkOutsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
             .lineToLinearHeading(Pose2d(49.5, alliance.adjust(60.0), Math.toRadians(180.0)))
-            .lineToLinearHeading(Pose2d(62.0, alliance.adjust(60.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(60.0, alliance.adjust(60.0), Math.toRadians(180.0)))
             .build()
 
         val parkTrajectory = when (parkPosition) {
@@ -154,11 +158,11 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
         schedule(
             SequentialCommandGroup(
                 FollowTrajectorySequence(mecanumDrive, spikeTrajectory),
-                EjectPixel(transferSubsystem!!),
                 FollowTrajectorySequence(mecanumDrive, clearPixelTrajectory),
                 FollowTrajectorySequence(mecanumDrive, deliverTrajectory),
-                DeliverPixel(deliverySubsystem!!),
-                FollowTrajectorySequence(mecanumDrive, parkTrajectory)
+                DeliverPixel(deliverySubsystem!!, multiTelemetry),
+                FollowTrajectorySequence(mecanumDrive, parkTrajectory),
+                ResetViperRunMode(deliverySubsystem!!)
             )
         )
     }
