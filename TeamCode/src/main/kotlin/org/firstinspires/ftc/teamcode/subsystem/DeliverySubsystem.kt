@@ -76,16 +76,12 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         viperMotor.power = 0.8
     }
 
-    fun setViperPower(
-        power: Double,
-    ) {
-        val currentPosition = viperMotor.currentPosition
+    fun setViperPowerAuton(power: Double) {
+        viperMotor.power = power
+    }
 
-        telemetry?.addLine("===")
-        telemetry?.addLine("viper power: $power")
-        telemetry?.addLine("viper bottom pos: $viperBottomPosition")
-        telemetry?.addLine("viper top pos: $viperTopPosition")
-        telemetry?.addLine("viper curr pos: $currentPosition")
+    fun setViperPower(power: Double) {
+        val currentPosition = viperMotor.currentPosition
 
         // Don't continue extending if at or beyond top position
         if (currentPosition <= viperTopPosition && power < 0) {
@@ -97,13 +93,8 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         if (power == 0.0) {
             viperMotor.power = power
         } else {
-            val adjustedPower = adjustViperPower(power)
-
-            telemetry?.addLine("viper adj power: $adjustedPower")
-            viperMotor.power = adjustedPower
+            viperMotor.power = adjustViperPower(power)
         }
-
-        telemetry?.addLine("===")
     }
 
     fun viperRunMode(mode: DcMotor.RunMode) {
