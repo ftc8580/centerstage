@@ -112,7 +112,7 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
         }
 
         // Shut down camera to save cycles
-//        try { tfod?.suspend() } catch(_: Exception) {}
+        try { tfod?.suspend() } catch(_: Exception) {}
 
         when (spikeLocation) {
             RandomizedSpikeLocation.RIGHT,
