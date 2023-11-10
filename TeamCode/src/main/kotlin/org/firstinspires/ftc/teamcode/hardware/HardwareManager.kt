@@ -146,8 +146,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         suspendServoRight = safelyGetHardware<Servo>(hardware, config.suspendServoRight)
 
         bucketServo?.position = 1.0
-        droneServo?.position = 0.0
-        droneServo?.direction = Direction.REVERSE
+        droneServo?.position = 0.5
         viperAngleServo?.direction = Direction.REVERSE
         suspendServoRight?.direction = Direction.REVERSE
         suspendServoLeft?.direction = Direction.REVERSE

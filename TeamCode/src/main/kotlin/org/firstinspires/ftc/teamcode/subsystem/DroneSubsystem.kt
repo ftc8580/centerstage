@@ -18,6 +18,6 @@ class DroneSubsystem(hardware: HardwareManager, private val telemetry: MultipleT
     }
 
     companion object {
-        private const val LAUNCH_POSITION = 1.0
+        private const val LAUNCH_POSITION = 0.35
     }
 }

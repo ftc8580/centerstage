@@ -87,12 +87,6 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         telemetry?.addLine("viper top pos: $viperTopPosition")
         telemetry?.addLine("viper curr pos: $currentPosition")
 
-        // Don't continue retracting if at or beyond bottom position
-        if (currentPosition >= viperBottomPosition && power > 0) {
-            viperMotor.power = 0.0
-            return
-        }
-
         // Don't continue extending if at or beyond top position
         if (currentPosition <= viperTopPosition && power < 0) {
             viperMotor.power = 0.0

@@ -5,4 +5,4 @@ import org.firstinspires.ftc.teamcode.config.ParkPosition
 
 @Suppress("UNUSED")
 @Autonomous(group = "Red")
-class RedWingSideAutonInside : WingSideAuton(Alliance.RED, ParkPosition.INSIDE)
+class RedWingSideOutsideAutonParkInside : WingSideAuton(Alliance.RED, ParkPosition.OUTSIDE, ParkPosition.INSIDE)

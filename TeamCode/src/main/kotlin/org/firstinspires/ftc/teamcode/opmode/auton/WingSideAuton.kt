@@ -35,7 +35,7 @@ abstract class WingSideAuton(
         val spikePosition1Pose = Pose2d(
             STARTING_X + alliance.adjust(APRIL_TAG_SPACING_INCHES),
             alliance.adjust(36.0),
-            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) + SIDE_SPIKE_ROTATION_DEGREES)
+            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) - SIDE_SPIKE_ROTATION_DEGREES)
         )
         val spikePosition2Pose = Pose2d(
             STARTING_X,
@@ -45,7 +45,7 @@ abstract class WingSideAuton(
         val spikePosition3Pose = Pose2d(
             STARTING_X - alliance.adjust(APRIL_TAG_SPACING_INCHES),
             alliance.adjust(36.0),
-            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) - SIDE_SPIKE_ROTATION_DEGREES)
+            Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) + SIDE_SPIKE_ROTATION_DEGREES)
         )
 
         // Pose to make sure we don't run into the dropped pixel

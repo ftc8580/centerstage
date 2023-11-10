@@ -4,5 +4,5 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.config.ParkPosition
 
 @Suppress("UNUSED")
-@Autonomous(group = "Blue")
-class BlueWingSideAutonOutside : WingSideAuton(Alliance.BLUE, ParkPosition.OUTSIDE)
+@Autonomous(group = "Red")
+class RedWingSideInsideAutonParkOutside : WingSideAuton(Alliance.RED, ParkPosition.INSIDE, ParkPosition.OUTSIDE)
