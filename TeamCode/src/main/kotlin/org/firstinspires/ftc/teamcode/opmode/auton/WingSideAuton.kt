@@ -72,16 +72,20 @@ abstract class WingSideAuton(
             Math.toRadians(180.0)
         )
 
+        val preSpikeTrajectory = mecanumDrive.trajectorySequenceBuilder(startingPose)
+            .lineToLinearHeading(clearSpikePose)
+            .build()
+
         // Spike delivery positions
-        val spikePosition1 = mecanumDrive.trajectorySequenceBuilder(startingPose)
+        val spikePosition1 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
             .lineToLinearHeading(spikePosition1Pose)
             .build()
 
-        val spikePosition2 = mecanumDrive.trajectorySequenceBuilder(startingPose)
+        val spikePosition2 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
             .lineToLinearHeading(spikePosition2Pose)
             .build()
 
-        val spikePosition3 = mecanumDrive.trajectorySequenceBuilder(startingPose)
+        val spikePosition3 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
             .lineToLinearHeading(spikePosition3Pose)
             .build()
 
@@ -163,6 +167,7 @@ abstract class WingSideAuton(
 
         schedule(
             SequentialCommandGroup(
+                FollowTrajectorySequence(mecanumDrive, preSpikeTrajectory),
                 FollowTrajectorySequence(mecanumDrive, spikeTrajectory),
                 FollowTrajectorySequence(mecanumDrive, clearPixelTrajectory),
                 FollowTrajectorySequence(mecanumDrive, deliverTrajectory),
