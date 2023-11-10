@@ -2,13 +2,52 @@ package org.firstinspires.ftc.teamcode.command.drone
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystem.DroneSubsystem
+import org.firstinspires.ftc.teamcode.util.CDRuntime
 
 class LaunchDrone(private val droneSubsystem: DroneSubsystem) : CommandBase() {
+    private val runtime = CDRuntime()
+    private var currentState = LaunchDroneState.IDLE
+
     init {
         addRequirements(droneSubsystem)
     }
 
     override fun initialize() {
-        droneSubsystem.launch()
+        currentState = LaunchDroneState.STARTED
+    }
+
+    override fun execute() {
+        when (currentState) {
+            LaunchDroneState.STARTED -> {
+                runtime.reset()
+                droneSubsystem.launch()
+                currentState = LaunchDroneState.LAUNCHING
+            }
+            LaunchDroneState.LAUNCHING -> {
+                if (runtime.isTimedOut(droneSubsystem.rotationTime)) {
+                    currentState = LaunchDroneState.FINISHED
+                }
+            }
+            else -> {
+                // Do nothing
+            }
+        }
+    }
+
+    override fun isFinished(): Boolean {
+        return currentState == LaunchDroneState.FINISHED
+    }
+
+    override fun end(interrupted: Boolean) {
+        droneSubsystem.reset()
+    }
+
+    companion object {
+        enum class LaunchDroneState {
+            IDLE,
+            STARTED,
+            LAUNCHING,
+            FINISHED
+        }
     }
 }
