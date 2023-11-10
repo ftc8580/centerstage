@@ -75,10 +75,6 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
     }
 
     companion object {
-        // TODO: Use real values
-        private const val DELIVERY_HEIGHT = 10
-        private const val INTAKE_HEIGHT = 0
-
         enum class DeliverPixelState {
             IDLE,
             STARTED,
