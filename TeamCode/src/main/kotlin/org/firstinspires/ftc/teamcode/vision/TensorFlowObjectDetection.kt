@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.PtzControl
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.vision.VisionPortal

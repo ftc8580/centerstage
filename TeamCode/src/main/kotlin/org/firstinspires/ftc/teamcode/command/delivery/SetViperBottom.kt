@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.command.delivery
 
 import com.arcrobotics.ftclib.command.CommandBase
-import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 
 class SetViperBottom(private val deliverySubsystem: DeliverySubsystem) : CommandBase() {

@@ -4,14 +4,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
-import org.firstinspires.ftc.teamcode.util.CDRuntime
 import org.firstinspires.ftc.teamcode.util.ServoUtil
 
 class DroneSubsystem(hardware: HardwareManager, private val telemetry: MultipleTelemetry? = null) : SubsystemBase() {
     private val droneServo: Servo
     val rotationTime = ServoUtil.getSweepTimeMs(
-        DroneSubsystem.START_POSITION,
-        DroneSubsystem.LAUNCH_POSITION,
+        START_POSITION,
+        LAUNCH_POSITION,
         0.0,
         1.0,
         5.0 * 270.0

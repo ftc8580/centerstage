@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode.auton
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
-import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
-import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixel
 import org.firstinspires.ftc.teamcode.command.delivery.ResetViperRunMode
-import org.firstinspires.ftc.teamcode.command.intake.EjectPixel
 import org.firstinspires.ftc.teamcode.config.ParkPosition
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.vision.RandomizedSpikeLocation
-import org.firstinspires.ftc.teamcode.vision.TensorFlowObjectDetection
 import java.lang.Exception
 
 abstract class BackdropSideAuton(private val alliance: Alliance, private val parkPosition: ParkPosition) : OpModeBase() {

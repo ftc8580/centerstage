@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
-import org.firstinspires.ftc.teamcode.util.MathUtil
 
 class SuspendSubsystem(hardware: HardwareManager, private val telemetry: MultipleTelemetry? = null) : SubsystemBase() {
     private val suspendMotor: DcMotorEx
