@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.command.intake
 
 import com.arcrobotics.ftclib.command.CommandBase
+import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.command.intake.model.IntakeState
 import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.util.CDRuntime
+import org.firstinspires.ftc.teamcode.util.isTimedOut
 
 class IntakePixel(private val intakeSubsystem: IntakeSubsystem) : CommandBase() {
     init {
@@ -11,7 +12,7 @@ class IntakePixel(private val intakeSubsystem: IntakeSubsystem) : CommandBase() 
     }
 
     private var currentState = IntakeState.IDLE
-    private var runtime = CDRuntime()
+    private var runtime = ElapsedTime()
 
     override fun initialize() {
         currentState = IntakeState.STARTED

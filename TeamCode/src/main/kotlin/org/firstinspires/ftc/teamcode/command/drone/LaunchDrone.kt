@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.command.drone
 
 import com.arcrobotics.ftclib.command.CommandBase
+import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.subsystem.DroneSubsystem
-import org.firstinspires.ftc.teamcode.util.CDRuntime
+import org.firstinspires.ftc.teamcode.util.isTimedOut
 
 class LaunchDrone(private val droneSubsystem: DroneSubsystem) : CommandBase() {
-    private val runtime = CDRuntime()
+    private val runtime = ElapsedTime()
     private var currentState = LaunchDroneState.IDLE
 
     init {

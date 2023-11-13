@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.command.delivery
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandBase
+import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
-import org.firstinspires.ftc.teamcode.util.CDRuntime
+import org.firstinspires.ftc.teamcode.util.isTimedOut
 
 class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val telemetry: MultipleTelemetry? = null) : CommandBase() {
     init {
@@ -12,7 +13,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
 
     private var currentState = DeliverPixelState.IDLE
     private var targetTimeMs = 0.0
-    private val runtime = CDRuntime()
+    private val runtime = ElapsedTime()
 
     override fun initialize() {
         targetTimeMs = deliverySubsystem.getOpenBucketMs() * 3
