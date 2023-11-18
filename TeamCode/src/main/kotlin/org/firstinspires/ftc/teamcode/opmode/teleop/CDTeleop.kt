@@ -88,13 +88,15 @@ class CDTeleop : OpModeBase() {
         val speedFastButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
         val speedSlowButton = gamepad.getGamepadButton(GamepadKeys.Button.A)
         val normalDriveButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
-        val droneReleaseButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+        val droneReleaseButtonA = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+        val droneReleaseButtonB = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+        val droneReleaseTrigger = droneReleaseButtonA.and(droneReleaseButtonB)
 
         speedFastButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_FAST })
         speedSlowButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_SLOW })
         normalDriveButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_NORMAL})
         droneSubsystem?.let {
-            droneReleaseButton.whenPressed(LaunchDrone(it))
+            droneReleaseTrigger.whenActive(LaunchDrone(it))
         }
     }
 
