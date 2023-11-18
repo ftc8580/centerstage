@@ -18,17 +18,18 @@ class GoToBottomPosition(private val deliverySubsystem: DeliverySubsystem) : Com
         // This is a state machine
         when (currentState) {
             GoToBottomPositionState.STARTED -> {
-                deliverySubsystem.setAngleLow()
-                currentState = GoToBottomPositionState.LOWERING_ANGLE
+                deliverySubsystem.setViperExtension(10.0)
+                currentState = GoToBottomPositionState.EXTENDING
             }
-            GoToBottomPositionState.LOWERING_ANGLE -> {
-                // Don't bother waiting for the servo, just go
-                deliverySubsystem.setViperPower(1.0)
-                currentState = GoToBottomPositionState.RETRACTING
+            GoToBottomPositionState.EXTENDING -> {
+                if (deliverySubsystem.isStopped()) {
+                    deliverySubsystem.setViperPowerAuton(1.0)
+                    currentState = GoToBottomPositionState.RETRACTING
+                }
             }
             GoToBottomPositionState.RETRACTING -> {
                 if (deliverySubsystem.isRetracted()) {
-                    deliverySubsystem.setViperPower(0.0)
+                    deliverySubsystem.setViperPowerAuton(0.0)
                     currentState = GoToBottomPositionState.FINISHED
                 }
             }
@@ -54,7 +55,7 @@ class GoToBottomPosition(private val deliverySubsystem: DeliverySubsystem) : Com
         enum class GoToBottomPositionState {
             IDLE,
             STARTED,
-            LOWERING_ANGLE,
+            EXTENDING,
             RETRACTING,
             FINISHED
         }

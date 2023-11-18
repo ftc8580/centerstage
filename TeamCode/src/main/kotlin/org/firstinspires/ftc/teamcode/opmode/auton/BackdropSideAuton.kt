@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixel
+import org.firstinspires.ftc.teamcode.command.delivery.GoToBottomPosition
 import org.firstinspires.ftc.teamcode.command.delivery.ResetViperRunMode
 import org.firstinspires.ftc.teamcode.config.ParkPosition
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
@@ -45,6 +46,12 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
             Math.toRadians(alliance.adjust(CENTER_SPIKE_DEGREES) - SIDE_SPIKE_ROTATION_DEGREES)
         )
 
+        val preSpikePose = Pose2d(
+            12.0,
+            alliance.adjust(58.5),
+            Math.toRadians(alliance.adjust(270.0))
+        )
+
         // Pose to make sure we don't run into the dropped pixel
         val clearSpikePose = Pose2d(
             12.0,
@@ -70,19 +77,19 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
         )
 
         val preSpikeTrajectory = mecanumDrive.trajectorySequenceBuilder(startingPose)
-            .lineToLinearHeading(clearSpikePose)
+            .lineToLinearHeading(preSpikePose)
             .build()
 
         // Spike delivery positions
-        val spikePosition1 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
+        val spikePosition1 = mecanumDrive.trajectorySequenceBuilder(preSpikePose)
             .lineToLinearHeading(spikePosition1Pose)
             .build()
 
-        val spikePosition2 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
+        val spikePosition2 = mecanumDrive.trajectorySequenceBuilder(preSpikePose)
             .lineToLinearHeading(spikePosition2Pose)
             .build()
 
-        val spikePosition3 = mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
+        val spikePosition3 = mecanumDrive.trajectorySequenceBuilder(preSpikePose)
             .lineToLinearHeading(spikePosition3Pose)
             .build()
 
@@ -146,8 +153,8 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
             .build()
 
         val parkOutsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .lineToLinearHeading(Pose2d(49.5, alliance.adjust(60.0), Math.toRadians(180.0)))
-            .lineToLinearHeading(Pose2d(60.0, alliance.adjust(60.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(49.5, alliance.adjust(62.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(60.0, alliance.adjust(62.0), Math.toRadians(180.0)))
             .build()
 
         val parkTrajectory = when (parkPosition) {
@@ -160,6 +167,7 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
                 FollowTrajectorySequence(mecanumDrive, preSpikeTrajectory),
                 FollowTrajectorySequence(mecanumDrive, spikeTrajectory),
                 FollowTrajectorySequence(mecanumDrive, clearPixelTrajectory),
+                GoToBottomPosition(deliverySubsystem!!),
                 FollowTrajectorySequence(mecanumDrive, deliverTrajectory),
                 DeliverPixel(deliverySubsystem!!, multiTelemetry),
                 FollowTrajectorySequence(mecanumDrive, parkTrajectory),

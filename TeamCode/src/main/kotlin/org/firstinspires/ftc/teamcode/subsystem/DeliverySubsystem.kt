@@ -77,6 +77,7 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
     }
 
     fun setViperPowerAuton(power: Double) {
+        viperMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
         viperMotor.power = power
     }
 
