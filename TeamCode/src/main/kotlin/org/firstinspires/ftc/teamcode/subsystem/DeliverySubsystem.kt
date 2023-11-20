@@ -41,6 +41,8 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
     fun setViperBottom() {
         viperMotor.power = 0.0
         viperBottomPosition = viperMotor.currentPosition
+        telemetry?.addLine("viperBottomPosition=$viperBottomPosition")
+        telemetry?.update()
         viperTopPosition = viperBottomPosition - VIPER_RANGE
         viperBottomDecelPosition = viperBottomPosition - VIPER_BACKOFF_RANGE
         viperTopDecelPosition = viperTopPosition + VIPER_BACKOFF_RANGE
@@ -77,6 +79,8 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
     }
 
     fun setViperPowerAuton(power: Double) {
+        telemetry?.addLine("Setting viperMotor power=$power")
+        telemetry?.update()
         viperMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
         viperMotor.power = power
     }

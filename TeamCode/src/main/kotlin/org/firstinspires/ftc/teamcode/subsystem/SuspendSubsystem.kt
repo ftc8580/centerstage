@@ -8,18 +8,15 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 
 class SuspendSubsystem(hardware: HardwareManager, private val telemetry: MultipleTelemetry? = null) : SubsystemBase() {
     private val suspendMotor: DcMotorEx
-    private val suspendServoLeft: Servo
-    private val suspendServoRight: Servo
+    private val suspendServo: Servo
 
     init {
         suspendMotor = hardware.suspendMotor!!
-        suspendServoLeft = hardware.suspendServoLeft!!
-        suspendServoRight = hardware.suspendServoRight!!
+        suspendServo = hardware.suspendServo!!
     }
 
     fun deployHooks() {
-        suspendServoLeft.position = HOOK_DEPLOYED_POSITION
-        suspendServoRight.position = HOOK_DEPLOYED_POSITION
+        suspendServo.position = HOOK_DEPLOYED_POSITION
     }
 
     fun setMotorPower(power: Double) {

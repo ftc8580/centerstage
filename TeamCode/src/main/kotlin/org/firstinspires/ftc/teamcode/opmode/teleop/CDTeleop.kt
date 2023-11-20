@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.command.bucket.CloseBucket
 import org.firstinspires.ftc.teamcode.command.bucket.OpenBucket
 import org.firstinspires.ftc.teamcode.command.delivery.DeliveryPositionOne
 import org.firstinspires.ftc.teamcode.command.delivery.GoToBottomPosition
+import org.firstinspires.ftc.teamcode.command.delivery.SetViperBottom
 import org.firstinspires.ftc.teamcode.command.drone.LaunchDrone
 import org.firstinspires.ftc.teamcode.command.suspend.DeployHooks
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
@@ -101,6 +102,8 @@ class CDTeleop : OpModeBase() {
     }
 
     private fun initializeCoDriverGamepad(gamepad: GamepadEx) {
+        // TODO: Figure out "go to position" buttons
+
         // Bucket
         val openBucketButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
         val closeBucketButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
@@ -109,8 +112,8 @@ class CDTeleop : OpModeBase() {
         // The arm angle buttons are reversed to fix an issue with the Servo direction
         val armAngleUpButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
         val armAngleDownButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-        val retractButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
-        val extendPositionOneButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+        // val retractButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
+        // val extendPositionOneButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
 
         // Intake controls
         val toggleIntakeControlButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
@@ -121,8 +124,8 @@ class CDTeleop : OpModeBase() {
         deliverySubsystem?.let {
             openBucketButton.whenPressed(OpenBucket(it))
             closeBucketButton.whenPressed(CloseBucket(it))
-            retractButton.whenPressed(GoToBottomPosition(it))
-            extendPositionOneButton.whenPressed(DeliveryPositionOne(it))
+            // retractButton.whenPressed(SetViperBottom(it, multiTelemetry))
+            // extendPositionOneButton.whenPressed(DeliveryPositionOne(it))
         }
 
         armAngleUpButton.whenActive(Runnable {
@@ -169,13 +172,9 @@ class CDTeleop : OpModeBase() {
             telemetry.addLine("drone pos: ${it.position}")
         } ?: telemetry.addLine("[WARNING] Drone servo not found")
 
-        hardware.suspendServoLeft?.let {
-            telemetry.addLine("suspendServoLeft pos: ${it.position}")
-        } ?: telemetry.addLine("[WARNING] suspendServoLeft not found")
-
-        hardware.suspendServoRight?.let {
-            telemetry.addLine("suspendServoRight pos: ${it.position}")
-        } ?: telemetry.addLine("[WARNING] suspendServoRight servo not found")
+        hardware.suspendServo?.let {
+            telemetry.addLine("suspendServo pos: ${it.position}")
+        } ?: telemetry.addLine("[WARNING] suspendServo not found")
 
         telemetry.update()
     }
