@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auton
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
+import org.firstinspires.ftc.teamcode.command.Wait
 import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixel
 import org.firstinspires.ftc.teamcode.command.delivery.GoToBottomPosition
 import org.firstinspires.ftc.teamcode.command.delivery.ResetViperRunMode
@@ -12,9 +13,15 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.vision.RandomizedSpikeLocation
 import java.lang.Exception
 
-abstract class BackdropSideAuton(private val alliance: Alliance, private val parkPosition: ParkPosition) : OpModeBase() {
+abstract class BackdropSideAuton(
+    private val alliance: Alliance,
+    private val parkPosition: ParkPosition,
+    private val pause: Boolean = false
+) : OpModeBase() {
     override fun initialize() {
         initHardware(true)
+
+        val pauseTimeMs = if (pause) 10000.0 else 0.0
 
         var spikeLocation = RandomizedSpikeLocation.UNKNOWN
         var spikePose: Pose2d? = null
@@ -164,6 +171,7 @@ abstract class BackdropSideAuton(private val alliance: Alliance, private val par
 
         schedule(
             SequentialCommandGroup(
+                Wait(pauseTimeMs),
                 FollowTrajectorySequence(mecanumDrive, preSpikeTrajectory),
                 FollowTrajectorySequence(mecanumDrive, spikeTrajectory),
                 FollowTrajectorySequence(mecanumDrive, clearPixelTrajectory),
