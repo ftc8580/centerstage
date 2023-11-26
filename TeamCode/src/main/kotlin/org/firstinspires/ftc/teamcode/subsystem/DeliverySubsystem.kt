@@ -134,6 +134,8 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         viperAngleServo.position = VIPER_ANGLE_POSITION_HIGH
     }
 
+    fun angleChangeTimeMs() = ServoUtil.getSweepTimeMs(VIPER_ANGLE_POSITION_LOW, VIPER_ANGLE_POSITION_LOW)
+
     companion object {
         // TODO: Check these values
         private const val SERVO_SCALE_RANGE_MIN = 0.5
@@ -143,7 +145,7 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         private const val VIPER_RANGE = 2950
         private const val VIPER_BACKOFF_RANGE = 300
 
-        private const val VIPER_ANGLE_POSITION_LOW = 0.18
-        private const val VIPER_ANGLE_POSITION_HIGH = 0.25
+        private const val VIPER_ANGLE_POSITION_LOW = 0.91
+        private const val VIPER_ANGLE_POSITION_HIGH = 1.00
     }
 }

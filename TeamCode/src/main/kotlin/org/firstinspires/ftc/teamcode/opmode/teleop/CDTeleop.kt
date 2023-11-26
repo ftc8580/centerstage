@@ -110,8 +110,8 @@ class CDTeleop : OpModeBase() {
 
         // Viper arm
         // The arm angle buttons are reversed to fix an issue with the Servo direction
-        val armAngleUpButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-        val armAngleDownButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+        val armAngleUpButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+        val armAngleDownButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
         // val retractButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
         // val extendPositionOneButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
 
@@ -128,15 +128,8 @@ class CDTeleop : OpModeBase() {
             // extendPositionOneButton.whenPressed(DeliveryPositionOne(it))
         }
 
-        armAngleUpButton.whenActive(Runnable {
-            val currentServoPosition = hardware.viperAngleServo?.position ?: 0.0
-            hardware.viperAngleServo?.position = currentServoPosition + VIPER_ANGLE_SERVO_INCREMENT
-        })
-
-        armAngleDownButton.whenActive(Runnable {
-            val currentServoPosition = hardware.viperAngleServo?.position ?: 0.0
-            hardware.viperAngleServo?.position = currentServoPosition - VIPER_ANGLE_SERVO_INCREMENT
-        })
+        armAngleUpButton.whenActive(Runnable { deliverySubsystem?.setAngleHigh() })
+        armAngleDownButton.whenActive(Runnable { deliverySubsystem?.setAngleLow() })
 
         intakeSubsystem?.let {
             toggleIntakeControlButton.whenPressed(Runnable { controlIntakeSeparately = !controlIntakeSeparately })
