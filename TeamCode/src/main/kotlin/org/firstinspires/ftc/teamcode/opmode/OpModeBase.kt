@@ -35,7 +35,7 @@ abstract class OpModeBase : CommandOpMode() {
     private val tfliteModelFileName = "/sdcard/FIRST/tflitemodels/CDCenterStage.tflite"
 
     fun initHardware(isAuto: Boolean) {
-        hardware = HardwareManager(CDConfig(), hardwareMap)
+        hardware = HardwareManager(CDConfig(), hardwareMap, isAuto)
         mecanumDrive = CDMecanumDrive(hardware)
         multiTelemetry = MultipleTelemetry(telemetry)
 

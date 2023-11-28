@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import java.lang.Exception
 
-class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap) {
+class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap, private val isAuton: Boolean = false) {
     lateinit var batteryVoltageSensor: VoltageSensor
     private lateinit var leftFrontMotor: DcMotorEx
     private lateinit var leftRearMotor: DcMotorEx
@@ -134,6 +134,7 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         transferMotor?.direction = DcMotorSimple.Direction.REVERSE
 
         intakeMotor = safelyGetHardware<DcMotorEx>(hardware, config.intakeMotor)
+        intakeMotor?.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
 
         suspendMotor = safelyGetHardware<DcMotorEx>(hardware, config.suspendMotor)
         suspendMotor?.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
@@ -146,7 +147,8 @@ class HardwareManager(private val config: CDConfig, val hardwareMap: HardwareMap
         suspendServo = safelyGetHardware<Servo>(hardware, config.suspendServo)
 
         viperAngleServo?.direction = Direction.REVERSE
-        viperAngleServo?.position = 1.0
+        viperAngleServo?.position = if (isAuton) 1.0 else 0.91
+
         suspendServo?.direction = Direction.REVERSE
         bucketServo?.position = 1.0
         droneServo?.position = 0.5
