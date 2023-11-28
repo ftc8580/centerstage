@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystem.DeliverySubsystem
 
-class SetViperBottom(private val deliverySubsystem: DeliverySubsystem, private val telemetry: MultipleTelemetry) : CommandBase() {
+class SetViperBottom(private val deliverySubsystem: DeliverySubsystem, private val telemetry: MultipleTelemetry? = null) : CommandBase() {
     init {
         addRequirements(deliverySubsystem)
     }
@@ -12,25 +12,25 @@ class SetViperBottom(private val deliverySubsystem: DeliverySubsystem, private v
     private var currentState = SetViperBottomState.IDLE
 
     override fun initialize() {
-        telemetry.addLine("Intializing ${this.name}")
-        telemetry.update()
+        telemetry?.addLine("Intializing ${this.name}")
+        telemetry?.update()
         currentState = SetViperBottomState.STARTED
     }
 
     override fun execute() {
         when (currentState) {
             SetViperBottomState.STARTED -> {
-                telemetry.addLine("Started ${this.name}")
-                telemetry.update()
+                telemetry?.addLine("Started ${this.name}")
+                telemetry?.update()
                 deliverySubsystem.setViperPowerAuton(1.0)
                 currentState = SetViperBottomState.SEEKING
             }
             SetViperBottomState.SEEKING -> {
-                telemetry.addLine("Seeking ${this.name}")
-                telemetry.update()
+                telemetry?.addLine("Seeking ${this.name}")
+                telemetry?.update()
                 if (deliverySubsystem.isRetracted()) {
-                    telemetry.addLine("Retracted ${this.name}")
-                    telemetry.update()
+                    telemetry?.addLine("Retracted ${this.name}")
+                    telemetry?.update()
                     deliverySubsystem.setViperBottom()
                     currentState = SetViperBottomState.FINISHED
                 }

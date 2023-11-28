@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.command.Wait
 import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixel
 import org.firstinspires.ftc.teamcode.command.delivery.GoToBottomPosition
 import org.firstinspires.ftc.teamcode.command.delivery.ResetViperRunMode
+import org.firstinspires.ftc.teamcode.command.delivery.SetViperBottom
 import org.firstinspires.ftc.teamcode.config.ParkPosition
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
@@ -185,6 +186,7 @@ abstract class WingSideAuton(
                 GoToBottomPosition(deliverySubsystem!!),
                 FollowTrajectorySequence(mecanumDrive, deliverTrajectory),
                 DeliverPixel(deliverySubsystem!!, multiTelemetry),
+                SetViperBottom(deliverySubsystem!!),
                 FollowTrajectorySequence(mecanumDrive, parkTrajectory),
                 ResetViperRunMode(deliverySubsystem!!)
             )
