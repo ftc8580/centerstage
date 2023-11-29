@@ -163,12 +163,12 @@ abstract class WingSideAuton(
         }
 
         val parkInsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .lineToLinearHeading(Pose2d(49.5, alliance.adjust(12.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(48.0, alliance.adjust(12.0), Math.toRadians(180.0)))
             .lineToLinearHeading(Pose2d(60.0, alliance.adjust(12.0), Math.toRadians(180.0)))
             .build()
 
         val parkOutsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .lineToLinearHeading(Pose2d(49.5, alliance.adjust(60.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(48.0, alliance.adjust(60.0), Math.toRadians(180.0)))
             .lineToLinearHeading(Pose2d(60.0, alliance.adjust(60.0), Math.toRadians(180.0)))
             .build()
 
@@ -194,7 +194,7 @@ abstract class WingSideAuton(
     }
 
     companion object {
-        private const val APRIL_TAG_SPACING_INCHES = 6.0
+        private const val APRIL_TAG_SPACING_INCHES = 5.5
         private const val CENTER_SPIKE_DEGREES = 270.0
         private const val SIDE_SPIKE_ROTATION_DEGREES = 45.0
         private const val STARTING_X = -36.0

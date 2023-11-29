@@ -26,7 +26,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
             DeliverPixelState.STARTED -> {
                 telemetry?.addLine("DeliverPixel Started")
                 telemetry?.update()
-                deliverySubsystem.setViperExtension(30.0)
+                deliverySubsystem.setViperExtension(25.0)
                 currentState = DeliverPixelState.RAISING
             }
             DeliverPixelState.RAISING -> {
