@@ -42,7 +42,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
                 telemetry?.addLine("DeliverPixel Dropping Pixel")
                 telemetry?.update()
                 if (runtime.isTimedOut(targetTimeMs)) {
-                    deliverySubsystem.closeBucket()
+                    runtime.reset()
                     deliverySubsystem.setViperExtension(0.0)
                     currentState = DeliverPixelState.LOWERING
                 }
@@ -50,7 +50,8 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
             DeliverPixelState.LOWERING -> {
                 telemetry?.addLine("DeliverPixel Lowering")
                 telemetry?.update()
-                if (deliverySubsystem.isStopped()) {
+                if (deliverySubsystem.isStopped() || runtime.isTimedOut(1500.0)) {
+                    deliverySubsystem.closeBucket()
                     currentState = DeliverPixelState.FINISHED
                 }
             }
