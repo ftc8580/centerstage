@@ -43,6 +43,20 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
                 telemetry?.update()
                 if (runtime.isTimedOut(targetTimeMs)) {
                     runtime.reset()
+                    deliverySubsystem.setAngleHigh()
+                    currentState = DeliverPixelState.ANGLE_UP
+                }
+            }
+            DeliverPixelState.ANGLE_UP -> {
+                if (runtime.isTimedOut(targetTimeMs)) {
+                    runtime.reset()
+                    deliverySubsystem.setAngleLow()
+                    currentState = DeliverPixelState.ANGLE_DOWN
+                }
+            }
+            DeliverPixelState.ANGLE_DOWN -> {
+                if (runtime.isTimedOut(targetTimeMs)) {
+                    runtime.reset()
                     deliverySubsystem.setViperExtension(0.0)
                     currentState = DeliverPixelState.LOWERING
                 }
@@ -82,6 +96,8 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
             STARTED,
             RAISING,
             DROPPING_PIXEL,
+            ANGLE_UP,
+            ANGLE_DOWN,
             LOWERING,
             FINISHED
         }
