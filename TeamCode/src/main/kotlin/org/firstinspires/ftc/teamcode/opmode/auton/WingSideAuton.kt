@@ -69,17 +69,17 @@ abstract class WingSideAuton(
         // Delivery positions
         val deliverPosition1Pose = Pose2d(
             51.5,
-            alliance.adjust(36.5) + APRIL_TAG_SPACING_INCHES,
+            alliance.adjust(35.0) + APRIL_TAG_SPACING_INCHES,
             Math.toRadians(180.0)
         )
         val deliverPosition2Pose = Pose2d(
             51.5,
-            alliance.adjust(36.5),
+            alliance.adjust(35.0),
             Math.toRadians(180.0)
         )
         val deliverPosition3Pose = Pose2d(
             51.5,
-            alliance.adjust(36.5) - APRIL_TAG_SPACING_INCHES,
+            alliance.adjust(35.0) - APRIL_TAG_SPACING_INCHES,
             Math.toRadians(180.0)
         )
 

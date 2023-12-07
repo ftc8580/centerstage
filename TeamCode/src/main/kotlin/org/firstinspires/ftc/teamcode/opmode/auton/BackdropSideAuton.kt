@@ -156,11 +156,13 @@ abstract class BackdropSideAuton(
             .build()
 
         val parkInsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .lineToLinearHeading(Pose2d(48.0, alliance.adjust(12.0), Math.toRadians(180.0)))
-            .lineToLinearHeading(Pose2d(60.0, alliance.adjust(12.0), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(48.0, alliance.adjust(36.5) - APRIL_TAG_SPACING_INCHES, Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(48.0, alliance.adjust(13.5), Math.toRadians(180.0)))
+            .lineToLinearHeading(Pose2d(60.0, alliance.adjust(13.5), Math.toRadians(180.0)))
             .build()
 
         val parkOutsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
+            .lineToLinearHeading(Pose2d(48.0, alliance.adjust(36.5) + APRIL_TAG_SPACING_INCHES, Math.toRadians(180.0)))
             .lineToLinearHeading(Pose2d(48.0, alliance.adjust(64.0), Math.toRadians(180.0)))
             .lineToLinearHeading(Pose2d(60.0, alliance.adjust(64.0), Math.toRadians(180.0)))
             .build()
