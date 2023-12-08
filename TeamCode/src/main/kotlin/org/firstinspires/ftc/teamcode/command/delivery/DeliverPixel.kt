@@ -16,7 +16,7 @@ class DeliverPixel(private val deliverySubsystem: DeliverySubsystem, private val
     private val runtime = ElapsedTime()
 
     override fun initialize() {
-        targetTimeMs = deliverySubsystem.getOpenBucketMs() * 3
+        targetTimeMs = deliverySubsystem.getOpenBucketMs()
         currentState = DeliverPixelState.STARTED
     }
 
