@@ -4,7 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.command.Wait
-import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixel
+import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixelStageOne
+import org.firstinspires.ftc.teamcode.command.delivery.DeliverPixelStageTwo
 import org.firstinspires.ftc.teamcode.command.delivery.GoToBottomPosition
 import org.firstinspires.ftc.teamcode.command.delivery.ResetViperRunMode
 import org.firstinspires.ftc.teamcode.command.delivery.SetViperBottom
@@ -27,7 +28,9 @@ abstract class WingSideAuton(
         var spikeLocation = RandomizedSpikeLocation.UNKNOWN
         var spikePose: Pose2d? = null
         var deliveryPose: Pose2d? = null
+        var clearBoardPose: Pose2d? = null
         var spikeTrajectory: TrajectorySequence? = null
+        var clearBoardTrajectory: TrajectorySequence? = null
 
         // Start Pose
         val startingPose = Pose2d(
@@ -83,6 +86,22 @@ abstract class WingSideAuton(
             Math.toRadians(180.0)
         )
 
+        val clearBoardPosition1Pose = Pose2d(
+            deliverPosition1Pose.x - 2.0,
+            deliverPosition1Pose.y,
+            deliverPosition1Pose.heading
+        )
+        val clearBoardPosition2Pose = Pose2d(
+            deliverPosition2Pose.x - 2.0,
+            deliverPosition2Pose.y,
+            deliverPosition2Pose.heading
+        )
+        val clearBoardPosition3Pose = Pose2d(
+            deliverPosition3Pose.x - 2.0,
+            deliverPosition3Pose.y,
+            deliverPosition3Pose.heading
+        )
+
         val preSpikeTrajectory = mecanumDrive.trajectorySequenceBuilder(startingPose)
             .lineToLinearHeading(preSpikePose)
             .build()
@@ -98,6 +117,19 @@ abstract class WingSideAuton(
 
         val spikePosition3 = mecanumDrive.trajectorySequenceBuilder(preSpikePose)
             .lineToLinearHeading(spikePosition3Pose)
+            .build()
+
+        // Clear backdrop positions
+        val clearBoardPosition1 = mecanumDrive.trajectorySequenceBuilder(deliverPosition1Pose)
+            .lineToLinearHeading(clearBoardPosition1Pose)
+            .build()
+
+        val clearBoardPosition2 = mecanumDrive.trajectorySequenceBuilder(deliverPosition2Pose)
+            .lineToLinearHeading(clearBoardPosition2Pose)
+            .build()
+
+        val clearBoardPosition3 = mecanumDrive.trajectorySequenceBuilder(deliverPosition3Pose)
+            .lineToLinearHeading(clearBoardPosition3Pose)
             .build()
 
         mecanumDrive.poseEstimate = startingPose
@@ -121,16 +153,22 @@ abstract class WingSideAuton(
                 spikePose = spikePosition3Pose
                 spikeTrajectory = spikePosition3
                 deliveryPose = deliverPosition3Pose
+                clearBoardPose = clearBoardPosition3Pose
+                clearBoardTrajectory = clearBoardPosition3
             }
             RandomizedSpikeLocation.CENTER -> {
                 spikePose = spikePosition2Pose
                 spikeTrajectory = spikePosition2
                 deliveryPose = deliverPosition2Pose
+                clearBoardPose = clearBoardPosition2Pose
+                clearBoardTrajectory = clearBoardPosition2
             }
             RandomizedSpikeLocation.LEFT -> {
                 spikePose = spikePosition1Pose
                 spikeTrajectory = spikePosition1
                 deliveryPose = deliverPosition1Pose
+                clearBoardPose = clearBoardPosition1Pose
+                clearBoardTrajectory = clearBoardPosition1
             }
         }
 
@@ -162,12 +200,12 @@ abstract class WingSideAuton(
                 .build()
         }
 
-        val parkInsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
+        val parkInsideTrajectory = mecanumDrive.trajectorySequenceBuilder(clearBoardPose)
             .lineToLinearHeading(Pose2d(48.0, alliance.adjust(12.0), Math.toRadians(180.0)))
             .lineToLinearHeading(Pose2d(60.0, alliance.adjust(12.0), Math.toRadians(180.0)))
             .build()
 
-        val parkOutsideTrajectory = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
+        val parkOutsideTrajectory = mecanumDrive.trajectorySequenceBuilder(clearBoardPose)
             .lineToLinearHeading(Pose2d(48.0, alliance.adjust(60.0), Math.toRadians(180.0)))
             .lineToLinearHeading(Pose2d(60.0, alliance.adjust(60.0), Math.toRadians(180.0)))
             .build()
@@ -185,8 +223,9 @@ abstract class WingSideAuton(
                 FollowTrajectorySequence(mecanumDrive, clearPixelTrajectory),
                 GoToBottomPosition(deliverySubsystem!!),
                 FollowTrajectorySequence(mecanumDrive, deliverTrajectory),
-                DeliverPixel(deliverySubsystem!!, multiTelemetry),
-                SetViperBottom(deliverySubsystem!!),
+                DeliverPixelStageOne(deliverySubsystem!!),
+                FollowTrajectorySequence(mecanumDrive, clearBoardTrajectory),
+                DeliverPixelStageTwo(deliverySubsystem!!),
                 FollowTrajectorySequence(mecanumDrive, parkTrajectory),
                 ResetViperRunMode(deliverySubsystem!!)
             )

@@ -72,7 +72,7 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
         telemetry?.addLine("isBusy: ${viperMotor.isBusy}")
     }
 
-    fun setViperPosition(target: Int) {
+    private fun setViperPosition(target: Int) {
         viperMotor.targetPosition = MathUtil.clamp(viperBottomPosition, viperTopPosition, target)
         viperRunMode(DcMotor.RunMode.RUN_TO_POSITION)
         viperMotor.power = 0.8
@@ -133,8 +133,6 @@ class DeliverySubsystem(hardware: HardwareManager, private val telemetry: Multip
     fun setAngleHigh() {
         viperAngleServo.position = VIPER_ANGLE_POSITION_HIGH
     }
-
-    fun angleChangeTimeMs() = ServoUtil.getSweepTimeMs(VIPER_ANGLE_POSITION_LOW, VIPER_ANGLE_POSITION_LOW)
 
     companion object {
         // TODO: Check these values
