@@ -181,21 +181,24 @@ abstract class WingSideAuton(
                 mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
                     .lineToLinearHeading(Pose2d(-55.0, alliance.adjust(36.0), Math.toRadians(alliance.adjust(-180.0))))
                     .lineToLinearHeading(Pose2d(-55.0, alliance.adjust(12.0), Math.toRadians(alliance.adjust(-180.0))))
-                    .lineToLinearHeading(Pose2d(30.0, alliance.adjust(12.0), Math.toRadians(alliance.adjust(-180.0))))
+                    .lineToLinearHeading(Pose2d(42.0, alliance.adjust(12.0), Math.toRadians(alliance.adjust(-180.0))))
+                    .lineToLinearHeading(Pose2d(42.0, deliveryPose.y, deliveryPose.heading))
                     .lineToLinearHeading(deliveryPose)
                     .build()
             } else {
                 mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
                     .lineToLinearHeading(Pose2d(-36.0, alliance.adjust(12.0), Math.toRadians(alliance.adjust(270.0))))
                     .turn(Math.toRadians(alliance.adjust(-90.0)))
-                    .lineToLinearHeading(Pose2d(30.0, alliance.adjust(12.0), Math.toRadians(alliance.adjust(-180.0))))
+                    .lineToLinearHeading(Pose2d(42.0, alliance.adjust(12.0), Math.toRadians(alliance.adjust(-180.0))))
+                    .lineToLinearHeading(Pose2d(42.0, deliveryPose.y, deliveryPose.heading))
                     .lineToLinearHeading(deliveryPose)
                     .build()
             }
         } else {
             mecanumDrive.trajectorySequenceBuilder(clearSpikePose)
                 .lineToLinearHeading(Pose2d(-36.0, alliance.adjust(60.0), Math.toRadians(alliance.adjust(-180.0))))
-                .lineToLinearHeading(Pose2d(30.0, alliance.adjust(60.0), Math.toRadians(alliance.adjust(-180.0))))
+                .lineToLinearHeading(Pose2d(42.0, alliance.adjust(60.0), Math.toRadians(alliance.adjust(-180.0))))
+                .lineToLinearHeading(Pose2d(42.0, deliveryPose.y, deliveryPose.heading))
                 .lineToLinearHeading(deliveryPose)
                 .build()
         }
